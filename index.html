@@ -142,7 +142,6 @@
             box-shadow: var(--shadow-sm);
         }
 
-        /* Evidenziazione speciale per le Partite */
         .upcoming-card.is-match {
             background: linear-gradient(135deg, rgba(229, 241, 255, 0.9), rgba(255, 255, 255, 0.95));
             border: 2px solid var(--accent);
@@ -181,7 +180,7 @@
             color: var(--text-secondary);
         }
 
-        /* Home Navigation (Partite vs Allenamenti Switcher) */
+        /* Home Navigation */
         .home-nav-container {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -212,7 +211,7 @@
             box-shadow: 0 6px 16px rgba(0, 122, 255, 0.3);
         }
 
-        /* Segmented Control (Apple Style Tab Bar Interno) */
+        /* Segmented Control */
         .nav-tabs {
             display: flex;
             background: rgba(120, 120, 128, 0.12);
@@ -593,21 +592,22 @@
             "Kiki", "Marti", "Paul", "Rob", "Vanni", "Waiz"
         ];
 
+        // Manteniamo gli ID numerici originali (1, 2, 3...) per preservare le risposte inserite su Firebase
         const MATCHES = [
-            { id: 'm1', type: 'match', round: "Andata", date: "08/10", title: "vs ASCOT TRIANTE NSC", location: "VIA ROSALBA CARRIERA 14, MILANO" },
-            { id: 'm2', type: 'match', round: "Andata", date: "15/10", title: "ZERONOVE 172 vs MB", location: "VIA VALVASSORI PERONI 48, MILANO" },
-            { id: 'm3', type: 'match', round: "Andata", date: "22/10", title: "CAMPAGNOLA vs MB", location: "VIA TARRA 8, LISSONE" },
-            { id: 'm4', type: 'match', round: "Andata", date: "29/10", title: "S.GIORGIO LIMITO vs MB", location: "P.ZA DON MILANI, PIOLTELLO" },
-            { id: 'm5', type: 'match', round: "Andata", date: "05/11", title: "VITTORINI vs MB", location: "VIA TOSI 21, MILANO" },
-            { id: 'm6', type: 'match', round: "Andata", date: "10/11", title: "PANTIGLIATE vs MB", location: "VIA STELLA POLARE 11/A, MEDIGLIA" },
-            { id: 'm7', type: 'match', round: "Andata", date: "19/11", title: "vs POLISPORTIVA FUTURA", location: "VIA ROSALBA CARRIERA 14, MILANO" },
-            { id: 'm8', type: 'match', round: "Ritorno", date: "29/11", title: "ASCOT TRIANTE vs MB", location: "VIA DUCA D'AOSTA 8/A, MONZA" },
-            { id: 'm9', type: 'match', round: "Ritorno", date: "10/12", title: "vs ZERONOVE 172", location: "VIA ROSALBA CARRIERA 14, MILANO" },
-            { id: 'm10', type: 'match', round: "Ritorno", date: "17/01", title: "vs CAMPAGNOLA DON BOSCO", location: "VIA ROSALBA CARRIERA 14, MILANO" },
-            { id: 'm11', type: 'match', round: "Ritorno", date: "21/01", title: "vs S.GIORGIO LIMITO SGL", location: "VIA ROSALBA CARRIERA 14, MILANO" },
-            { id: 'm12', type: 'match', round: "Ritorno", date: "28/01", title: "vs VITTORINI", location: "VIA ROSALBA CARRIERA 14, MILANO" },
-            { id: 'm13', type: 'match', round: "Ritorno", date: "04/02", title: "vs PANTIGLIATE POL.", location: "VIA ROSALBA CARRIERA 14, MILANO" },
-            { id: 'm14', type: 'match', round: "Ritorno", date: "12/02", title: "POL. FUTURA vs MB", location: "VIA DA VINCI 18, PADERNO DUGNANO" }
+            { id: 1, type: 'match', round: "Andata", date: "08/10", title: "vs ASCOT TRIANTE NSC", location: "VIA ROSALBA CARRIERA 14, MILANO" },
+            { id: 2, type: 'match', round: "Andata", date: "15/10", title: "ZERONOVE 172 vs MB", location: "VIA VALVASSORI PERONI 48, MILANO" },
+            { id: 3, type: 'match', round: "Andata", date: "22/10", title: "CAMPAGNOLA vs MB", location: "VIA TARRA 8, LISSONE" },
+            { id: 4, type: 'match', round: "Andata", date: "29/10", title: "S.GIORGIO LIMITO vs MB", location: "P.ZA DON MILANI, PIOLTELLO" },
+            { id: 5, type: 'match', round: "Andata", date: "05/11", title: "VITTORINI vs MB", location: "VIA TOSI 21, MILANO" },
+            { id: 6, type: 'match', round: "Andata", date: "10/11", title: "PANTIGLIATE vs MB", location: "VIA STELLA POLARE 11/A, MEDIGLIA" },
+            { id: 7, type: 'match', round: "Andata", date: "19/11", title: "vs POLISPORTIVA FUTURA", location: "VIA ROSALBA CARRIERA 14, MILANO" },
+            { id: 8, type: 'match', round: "Ritorno", date: "29/11", title: "ASCOT TRIANTE vs MB", location: "VIA DUCA D'AOSTA 8/A, MONZA" },
+            { id: 9, type: 'match', round: "Ritorno", date: "10/12", title: "vs ZERONOVE 172", location: "VIA ROSALBA CARRIERA 14, MILANO" },
+            { id: 10, type: 'match', round: "Ritorno", date: "17/01", title: "vs CAMPAGNOLA DON BOSCO", location: "VIA ROSALBA CARRIERA 14, MILANO" },
+            { id: 11, type: 'match', round: "Ritorno", date: "21/01", title: "vs S.GIORGIO LIMITO SGL", location: "VIA ROSALBA CARRIERA 14, MILANO" },
+            { id: 12, type: 'match', round: "Ritorno", date: "28/01", title: "vs VITTORINI", location: "VIA ROSALBA CARRIERA 14, MILANO" },
+            { id: 13, type: 'match', round: "Ritorno", date: "04/02", title: "vs PANTIGLIATE POL.", location: "VIA ROSALBA CARRIERA 14, MILANO" },
+            { id: 14, type: 'match', round: "Ritorno", date: "12/02", title: "POL. FUTURA vs MB", location: "VIA DA VINCI 18, PADERNO DUGNANO" }
         ];
 
         let currentUser = localStorage.getItem('mb_user') || null;
@@ -694,11 +694,8 @@
             }
         }
 
-        // Renderizza il Widget dei Prossimi 2 Eventi
         function renderUpcomingWidget() {
             const allEvents = [...MATCHES, ...customTrainings];
-            
-            // Ordine combinato degli eventi
             const nextEvents = allEvents.slice(0, 2);
             const grid = document.getElementById('upcomingGrid');
 
