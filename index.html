@@ -97,6 +97,90 @@
             box-shadow: 0 0 8px #30d158;
         }
 
+        /* Widget Prossimi Eventi */
+        .widget-upcoming {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: var(--radius-lg);
+            padding: 18px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .widget-upcoming-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .upcoming-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 12px;
+        }
+
+        .upcoming-card {
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 14px;
+            position: relative;
+            transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+            cursor: pointer;
+        }
+
+        .upcoming-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* Evidenziazione speciale per le Partite */
+        .upcoming-card.is-match {
+            background: linear-gradient(135deg, rgba(229, 241, 255, 0.9), rgba(255, 255, 255, 0.95));
+            border: 2px solid var(--accent);
+            box-shadow: 0 4px 14px rgba(0, 122, 255, 0.15);
+        }
+
+        .upcoming-card-type {
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 3px 8px;
+            border-radius: 10px;
+            display: inline-block;
+            margin-bottom: 6px;
+        }
+
+        .type-match {
+            background: var(--accent);
+            color: #ffffff;
+        }
+
+        .type-training {
+            background: rgba(120, 120, 128, 0.16);
+            color: var(--text-secondary);
+        }
+
+        .upcoming-card-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 4px;
+        }
+
+        .upcoming-card-info {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
         /* Home Navigation (Partite vs Allenamenti Switcher) */
         .home-nav-container {
             display: grid;
@@ -436,6 +520,14 @@
         </div>
     </header>
 
+    <!-- Widget Prossimi Eventi -->
+    <div id="upcomingWidget" class="widget-upcoming hidden">
+        <div class="widget-upcoming-title">
+            <span>⚡ Prossimi 2 Eventi</span>
+        </div>
+        <div id="upcomingGrid" class="upcoming-grid"></div>
+    </div>
+
     <!-- Home Switcher: Partite vs Allenamenti -->
     <div id="homeNav" class="home-nav-container hidden">
         <button id="btnSectionMatches" class="home-nav-btn active" onclick="switchSection('matches')">🏆 Partite</button>
@@ -459,7 +551,7 @@
         <div class="user-grid" id="userGrid"></div>
     </div>
 
-    <!-- Sezione Allenamenti: Modulo di Aggiunta con Selettore Palestra -->
+    <!-- Sezione Allenamenti: Modulo di Aggiunta -->
     <div id="addTrainingSection" class="add-training-card hidden">
         <h3>➕ Aggiungi Nuovo Allenamento</h3>
         <div class="form-row">
@@ -502,20 +594,20 @@
         ];
 
         const MATCHES = [
-            { id: 'm1', round: "Andata", date: "08/10", title: "vs ASCOT TRIANTE NSC", location: "VIA ROSALBA CARRIERA 14, MILANO" },
-            { id: 'm2', round: "Andata", date: "15/10", title: "ZERONOVE 172 vs MB", location: "VIA VALVASSORI PERONI 48, MILANO" },
-            { id: 'm3', round: "Andata", date: "22/10", title: "CAMPAGNOLA vs MB", location: "VIA TARRA 8, LISSONE" },
-            { id: 'm4', round: "Andata", date: "29/10", title: "S.GIORGIO LIMITO vs MB", location: "P.ZA DON MILANI, PIOLTELLO" },
-            { id: 'm5', round: "Andata", date: "05/11", title: "VITTORINI vs MB", location: "VIA TOSI 21, MILANO" },
-            { id: 'm6', round: "Andata", date: "10/11", title: "PANTIGLIATE vs MB", location: "VIA STELLA POLARE 11/A, MEDIGLIA" },
-            { id: 'm7', round: "Andata", date: "19/11", title: "vs POLISPORTIVA FUTURA", location: "VIA ROSALBA CARRIERA 14, MILANO" },
-            { id: 'm8', round: "Ritorno", date: "29/11", title: "ASCOT TRIANTE vs MB", location: "VIA DUCA D'AOSTA 8/A, MONZA" },
-            { id: 'm9', round: "Ritorno", date: "10/12", title: "vs ZERONOVE 172", location: "VIA ROSALBA CARRIERA 14, MILANO" },
-            { id: 'm10', round: "Ritorno", date: "17/01", title: "vs CAMPAGNOLA DON BOSCO", location: "VIA ROSALBA CARRIERA 14, MILANO" },
-            { id: 'm11', round: "Ritorno", date: "21/01", title: "vs S.GIORGIO LIMITO SGL", location: "VIA ROSALBA CARRIERA 14, MILANO" },
-            { id: 'm12', round: "Ritorno", date: "28/01", title: "vs VITTORINI", location: "VIA ROSALBA CARRIERA 14, MILANO" },
-            { id: 'm13', round: "Ritorno", date: "04/02", title: "vs PANTIGLIATE POL.", location: "VIA ROSALBA CARRIERA 14, MILANO" },
-            { id: 'm14', round: "Ritorno", date: "12/02", title: "POL. FUTURA vs MB", location: "VIA DA VINCI 18, PADERNO DUGNANO" }
+            { id: 'm1', type: 'match', round: "Andata", date: "08/10", title: "vs ASCOT TRIANTE NSC", location: "VIA ROSALBA CARRIERA 14, MILANO" },
+            { id: 'm2', type: 'match', round: "Andata", date: "15/10", title: "ZERONOVE 172 vs MB", location: "VIA VALVASSORI PERONI 48, MILANO" },
+            { id: 'm3', type: 'match', round: "Andata", date: "22/10", title: "CAMPAGNOLA vs MB", location: "VIA TARRA 8, LISSONE" },
+            { id: 'm4', type: 'match', round: "Andata", date: "29/10", title: "S.GIORGIO LIMITO vs MB", location: "P.ZA DON MILANI, PIOLTELLO" },
+            { id: 'm5', type: 'match', round: "Andata", date: "05/11", title: "VITTORINI vs MB", location: "VIA TOSI 21, MILANO" },
+            { id: 'm6', type: 'match', round: "Andata", date: "10/11", title: "PANTIGLIATE vs MB", location: "VIA STELLA POLARE 11/A, MEDIGLIA" },
+            { id: 'm7', type: 'match', round: "Andata", date: "19/11", title: "vs POLISPORTIVA FUTURA", location: "VIA ROSALBA CARRIERA 14, MILANO" },
+            { id: 'm8', type: 'match', round: "Ritorno", date: "29/11", title: "ASCOT TRIANTE vs MB", location: "VIA DUCA D'AOSTA 8/A, MONZA" },
+            { id: 'm9', type: 'match', round: "Ritorno", date: "10/12", title: "vs ZERONOVE 172", location: "VIA ROSALBA CARRIERA 14, MILANO" },
+            { id: 'm10', type: 'match', round: "Ritorno", date: "17/01", title: "vs CAMPAGNOLA DON BOSCO", location: "VIA ROSALBA CARRIERA 14, MILANO" },
+            { id: 'm11', type: 'match', round: "Ritorno", date: "21/01", title: "vs S.GIORGIO LIMITO SGL", location: "VIA ROSALBA CARRIERA 14, MILANO" },
+            { id: 'm12', type: 'match', round: "Ritorno", date: "28/01", title: "vs VITTORINI", location: "VIA ROSALBA CARRIERA 14, MILANO" },
+            { id: 'm13', type: 'match', round: "Ritorno", date: "04/02", title: "vs PANTIGLIATE POL.", location: "VIA ROSALBA CARRIERA 14, MILANO" },
+            { id: 'm14', type: 'match', round: "Ritorno", date: "12/02", title: "POL. FUTURA vs MB", location: "VIA DA VINCI 18, PADERNO DUGNANO" }
         ];
 
         let currentUser = localStorage.getItem('mb_user') || null;
@@ -532,7 +624,7 @@
 
         db.ref('trainings').on('value', (snapshot) => {
             const data = snapshot.val() || {};
-            customTrainings = Object.keys(data).map(key => ({ id: key, ...data[key] }));
+            customTrainings = Object.keys(data).map(key => ({ id: key, type: 'training', ...data[key] }));
             refreshUI();
         });
 
@@ -549,6 +641,7 @@
             localStorage.setItem('mb_user', userName);
             document.getElementById('currentUserName').innerText = userName;
             document.getElementById('userSelectionScreen').classList.add('hidden');
+            document.getElementById('upcomingWidget').classList.remove('hidden');
             document.getElementById('homeNav').classList.remove('hidden');
             document.getElementById('navTabs').classList.remove('hidden');
             document.getElementById('userBar').classList.remove('hidden');
@@ -559,6 +652,7 @@
             currentUser = null;
             localStorage.removeItem('mb_user');
             document.getElementById('userSelectionScreen').classList.remove('hidden');
+            document.getElementById('upcomingWidget').classList.add('hidden');
             document.getElementById('homeNav').classList.add('hidden');
             document.getElementById('navTabs').classList.add('hidden');
             document.getElementById('userBar').classList.add('hidden');
@@ -584,6 +678,8 @@
         function refreshUI() {
             if (!currentUser) return;
 
+            renderUpcomingWidget();
+
             const isTrainings = activeSection === 'trainings';
             document.getElementById('addTrainingSection').classList.toggle('hidden', !isTrainings || activeTab !== 'my');
 
@@ -596,6 +692,44 @@
                 document.getElementById('matrixContainer').classList.remove('hidden');
                 renderMatrix();
             }
+        }
+
+        // Renderizza il Widget dei Prossimi 2 Eventi
+        function renderUpcomingWidget() {
+            const allEvents = [...MATCHES, ...customTrainings];
+            
+            // Ordine combinato degli eventi
+            const nextEvents = allEvents.slice(0, 2);
+            const grid = document.getElementById('upcomingGrid');
+
+            if (nextEvents.length === 0) {
+                grid.innerHTML = `<div style="font-size:0.8rem; color:var(--text-secondary);">Nessun evento in programma.</div>`;
+                return;
+            }
+
+            grid.innerHTML = nextEvents.map(evt => {
+                const isMatch = evt.type === 'match';
+                const status = (attendanceData[evt.id] || {})[currentUser];
+                let statusBadge = status === 'YES' ? '🟢 Presente' : status === 'NO' ? '🔴 Assente' : status === 'MAYBE' ? '🟡 In forse' : '⚪ Da confermare';
+
+                return `
+                    <div class="upcoming-card ${isMatch ? 'is-match' : ''}" onclick="goToEvent('${evt.type}')">
+                        <span class="upcoming-card-type ${isMatch ? 'type-match' : 'type-training'}">
+                            ${isMatch ? '🏆 Partita' : '🏋 Allenamento'}
+                        </span>
+                        <div class="upcoming-card-title">${evt.title}</div>
+                        <div class="upcoming-card-info">📅 ${evt.date} | 📍 ${evt.location}</div>
+                        <div style="font-size:0.75rem; font-weight:600; margin-top:8px; color:var(--text-secondary);">
+                            Stato personale: <strong>${statusBadge}</strong>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function goToEvent(type) {
+            if (type === 'match') switchSection('matches');
+            else switchSection('trainings');
         }
 
         function createTraining() {
