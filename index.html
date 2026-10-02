@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Presenze - Millennium Bug AlPub</title>
+    
+    <!-- Firebase SDKs (Versione Compatibile) -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-database-compat.js"></script>
+
+    <style>
+        :root {
+            --bg-primary: #f1f5f9;
+            --card-bg: #ffffff;
+            --accent: #2563eb;
+            --accent-hover: #1d4ed8;
+            --text: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --success: #16a34a;
+            --danger: #dc2626;
+            --warning: #d97706;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text);
+            padding: 16px;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding-bottom: 60px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #1e3a8a, #2563eb);
+            color: white;
+            padding: 20px 16px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            font-size: 1.5rem;
+            margin-bottom: 4px;
+        }
+
+        header p {
+            opacity: 0.9;
+            font-size: 0.85rem;
+        }
+
+        .sync-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255,255,255,0.2);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            margin-top: 8px;
+        }
+
+        .sync-dot {
+            width: 8px;
+            height: 8px;
+            background-color: #22c55e;
+            border-radius: 50%;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 12px;
+            background: #e2e8f0;
+            color: var(--text);
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 0.9rem;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .tab-btn.active {
+            background: var(--accent);
+            color: white;
+        }
+
+        .user-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #e0e7ff;
+            color: #3730a3;
+            padding: 10px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .btn-switch {
+            background: #3730a3;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        #userSelectionScreen {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 24px;
+            border: 1px solid var(--border);
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .user-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .user-btn {
+            background: #f8fafc;
+            border: 2px solid var(--border);
+            color: var(--text);
+            padding: 12px 8px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .user-btn:hover {
+            border-color: var(--accent);
+            background: #eff6ff;
+            color: var(--accent);
+        }
+
+        .match-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+            border: 1px solid var(--border);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .match-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+            gap: 8px;
+        }
+
+        .match-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .match-info {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .badge {
+            background: #e2e8f0;
+            color: #475569;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .status-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 8px;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+        }
+
+        .opt-btn {
+            padding: 10px 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            border-radius: 8px;
+            border: 2px solid var(--border);
+            background: #ffffff;
+            color: var(--text-muted);
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .opt-btn.yes.active { background: #dcfce7; color: var(--success); border-color: var(--success); }
+        .opt-btn.no.active { background: #fee2e2; color: var(--danger); border-color: var(--danger); }
+        .opt-btn.maybe.active { background: #fef3c7; color: var(--warning); border-color: var(--warning); }
+
+        .team-summary {
+            margin-top: 10px;
+            font-size: 0.8rem;
+            background: #f8fafc;
+            padding: 8px 12px;
+            border-radius: 6px;
+            display: flex;
+            gap: 12px;
+            font-weight: 600;
+        }
+
+        .summary-details {
+            margin-top: 8px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        .matrix-container {
+            overflow-x: auto;
+            background: var(--card-bg);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            padding: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        table.matrix {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.8rem;
+            text-align: center;
+        }
+
+        table.matrix th, table.matrix td {
+            padding: 8px 6px;
+            border: 1px solid var(--border);
+            min-width: 45px;
+        }
+
+        table.matrix th.player-col, table.matrix td.player-name {
+            text-align: left;
+            background: #f8fafc;
+            position: sticky;
+            left: 0;
+            z-index: 2;
+        }
+
+        .st-yes { background: #dcfce7; color: var(--success); font-weight: bold; }
+        .st-no { background: #fee2e2; color: var(--danger); font-weight: bold; }
+        .st-maybe { background: #fef3c7; color: var(--warning); font-weight: bold; }
+        .st-none { color: #cbd5e1; }
+
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>MILLENNIUM BUG ALPUB</h1>
+        <p>Campionato CSI Mista Open A1 - Presenze Squadra</p>
+        <div class="sync-badge">
+            <div class="sync-dot"></div> Sincronizzato in Tempo Reale
+        </div>
+    </header>
+
+    <div id="navTabs" class="nav-tabs hidden">
+        <button id="tabMyBtn" class="tab-btn active" onclick="switchTab('my')">✏️ Le Mie Presenze</button>
+        <button id="tabTeamBtn" class="tab-btn" onclick="switchTab('team')">📊 Tabella Presenze Squadra</button>
+    </div>
+
+    <div id="userBar" class="user-bar hidden">
+        <span>Giocatore: <strong id="currentUserName">---</strong></span>
+        <button class="btn-switch" onclick="switchUser()">Cambia Giocatore</button>
+    </div>
+
+    <div id="userSelectionScreen">
+        <h2>Chi sei?</h2>
+        <p style="color: var(--text-muted); font-size: 0.9rem;">Seleziona il tuo nome per accedere:</p>
+        <div class="user-grid" id="userGrid"></div>
+    </div>
+
+    <main id="matchesContainer" class="hidden"></main>
+
+    <div id="matrixContainer" class="matrix-container hidden">
+        <table class="matrix" id="matrixTable"></table>
+    </div>
+
+    <script>
+        // Configurazione Firebase integrata
+        const firebaseConfig = {
+            apiKey: "AIzaSyB-lB6qlfQKCBCWzbXj88tpJIN1IQ0_Pzw",
+            authDomain: "millenniumbugalpub-a3a6c.firebaseapp.com",
+            databaseURL: "https://millenniumbugalpub-a3a6c-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "millenniumbugalpub-a3a6c",
+            storageBucket: "millenniumbugalpub-a3a6c.firebasestorage.app",
+            messagingSenderId: "228956547857",
+            appId: "1:228956547857:web:21c5766095a0d1eb6e7ab0",
+            measurementId: "G-VD2ZFG3HE2"
+        };
+
+        // Inizializzazione Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        // Elenco Giocatori Aggiornato (16)
+        const PLAYERS = [
+            "Alby", "Angy", "Anto", "Dani", "Fra", 
+            "Gianlu", "Gio", "Giuly", "Ila", "Jack", 
+            "Kiki", "Marti", "Paul", "Rob", "Vanni", "Waiz"
+        ];
+
+        const MATCHES = [
+            { id: 1, round: "Andata", date: "08/10", title: "vs ASCOT TRIANTE NSC", location: "VIA ROSALBA CARRIERA 14, MILANO" },
+            { id: 2, round: "Andata", date: "15/10", title: "ZERONOVE 172 vs MB", location: "VIA VALVASSORI PERONI 48, MILANO" },
+            { id: 3, round: "Andata", date: "22/10", title: "CAMPAGNOLA vs MB", location: "VIA TARRA 8, LISSONE" },
+            { id: 4, round: "Andata", date: "29/10", title: "S.GIORGIO LIMITO vs MB", location: "P.ZA DON MILANI, PIOLTELLO" },
+            { id: 5, round: "Andata", date: "05/11", title: "VITTORINI vs MB", location: "VIA TOSI 21, MILANO" },
+            { id: 6, round: "Andata", date: "10/11", title: "PANTIGLIATE vs MB", location: "VIA STELLA POLARE 11/A, MEDIGLIA" },
+            { id: 7, round: "Andata", date: "19/11", title: "vs POLISPORTIVA FUTURA", location: "VIA ROSALBA CARRIERA 14, MILANO" },
+            { id: 8, round: "Ritorno", date: "29/11", title: "ASCOT TRIANTE vs MB", location: "VIA DUCA D'AOSTA 8/A, MONZA" },
+            { id: 9, round: "Ritorno", date: "10/12", title: "vs ZERONOVE 172", location: "VIA ROSALBA CARRIERA 14, MILANO" },
+            { id: 10, round: "Ritorno", date: "17/01", title: "vs CAMPAGNOLA DON BOSCO", location: "VIA ROSALBA CARRIERA 14, MILANO" },
+            { id: 11, round: "Ritorno", date: "21/01", title: "vs S.GIORGIO LIMITO SGL", location: "VIA ROSALBA CARRIERA 14, MILANO" },
+            { id: 12, round: "Ritorno", date: "28/01", title: "vs VITTORINI", location: "VIA ROSALBA CARRIERA 14, MILANO" },
+            { id: 13, round: "Ritorno", date: "04/02", title: "vs PANTIGLIATE POL.", location: "VIA ROSALBA CARRIERA 14, MILANO" },
+            { id: 14, round: "Ritorno", date: "12/02", title: "POL. FUTURA vs MB", location: "VIA DA VINCI 18, PADERNO DUGNANO" }
+        ];
+
+        let currentUser = localStorage.getItem('mb_user') || null;
+        let activeTab = 'my';
+        let attendanceData = {};
+
+        // Sincronizzazione in TEMPO REALE
+        db.ref('attendance').on('value', (snapshot) => {
+            attendanceData = snapshot.val() || {};
+            if (currentUser) {
+                if (activeTab === 'my') renderMatches();
+                else renderMatrix();
+            }
+        });
+
+        function initUserGrid() {
+            const grid = document.getElementById('userGrid');
+            grid.innerHTML = PLAYERS.map(p => `
+                <button class="user-btn" onclick="selectUser('${p}')">${p}</button>
+            `).join('');
+            if (currentUser && PLAYERS.includes(currentUser)) selectUser(currentUser);
+        }
+
+        function selectUser(userName) {
+            currentUser = userName;
+            localStorage.setItem('mb_user', userName);
+            document.getElementById('currentUserName').innerText = userName;
+            document.getElementById('userSelectionScreen').classList.add('hidden');
+            document.getElementById('navTabs').classList.remove('hidden');
+            document.getElementById('userBar').classList.remove('hidden');
+            switchTab('my');
+        }
+
+        function switchUser() {
+            currentUser = null;
+            localStorage.removeItem('mb_user');
+            document.getElementById('userSelectionScreen').classList.remove('hidden');
+            document.getElementById('navTabs').classList.add('hidden');
+            document.getElementById('userBar').classList.add('hidden');
+            document.getElementById('matchesContainer').classList.add('hidden');
+            document.getElementById('matrixContainer').classList.add('hidden');
+        }
+
+        function switchTab(tab) {
+            activeTab = tab;
+            document.getElementById('tabMyBtn').classList.toggle('active', tab === 'my');
+            document.getElementById('tabTeamBtn').classList.toggle('active', tab === 'team');
+
+            if (tab === 'my') {
+                document.getElementById('matchesContainer').classList.remove('hidden');
+                document.getElementById('matrixContainer').classList.add('hidden');
+                renderMatches();
+            } else {
+                document.getElementById('matchesContainer').classList.add('hidden');
+                document.getElementById('matrixContainer').classList.remove('hidden');
+                renderMatrix();
+            }
+        }
+
+        function setPresence(matchId, status) {
+            if (!currentUser) return;
+            const currentStatus = (attendanceData[matchId] || {})[currentUser];
+            const newStatus = (currentStatus === status) ? null : status;
+
+            if (newStatus === null) {
+                db.ref(`attendance/${matchId}/${currentUser}`).remove();
+            } else {
+                db.ref(`attendance/${matchId}/${currentUser}`).set(newStatus);
+            }
+        }
+
+        function renderMatches() {
+            const container = document.getElementById('matchesContainer');
+            container.innerHTML = MATCHES.map(m => {
+                const matchData = attendanceData[m.id] || {};
+                const userStatus = matchData[currentUser];
+
+                const yesList = PLAYERS.filter(p => matchData[p] === 'YES');
+                const noList = PLAYERS.filter(p => matchData[p] === 'NO');
+                const maybeList = PLAYERS.filter(p => matchData[p] === 'MAYBE');
+
+                return `
+                    <div class="match-card">
+                        <div class="match-header">
+                            <div>
+                                <div class="match-title">${m.title}</div>
+                                <div class="match-info">📅 ${m.date} | 📍 ${m.location}</div>
+                            </div>
+                            <span class="badge">${m.round}</span>
+                        </div>
+
+                        <div class="status-options">
+                            <button class="opt-btn yes ${userStatus === 'YES' ? 'active' : ''}" onclick="setPresence(${m.id}, 'YES')">Ci sarò</button>
+                            <button class="opt-btn maybe ${userStatus === 'MAYBE' ? 'active' : ''}" onclick="setPresence(${m.id}, 'MAYBE')">In teoria ci sarò</button>
+                            <button class="opt-btn no ${userStatus === 'NO' ? 'active' : ''}" onclick="setPresence(${m.id}, 'NO')">Assente</button>
+                        </div>
+
+                        <div class="team-summary">
+                            <span style="color:var(--success)">Si: ${yesList.length}</span>
+                            <span style="color:var(--warning)">Forse: ${maybeList.length}</span>
+                            <span style="color:var(--danger)">No: ${noList.length}</span>
+                        </div>
+
+                        <div class="summary-details">
+                            ${yesList.length > 0 ? `<div><strong>Presenti:</strong> ${yesList.join(', ')}</div>` : ''}
+                            ${maybeList.length > 0 ? `<div><strong>In forse:</strong> ${maybeList.join(', ')}</div>` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderMatrix() {
+            const table = document.getElementById('matrixTable');
+            let headerHTML = `<thead><tr><th class="player-col">Giocatore</th>`;
+            MATCHES.forEach(m => {
+                headerHTML += `<th>P${m.id}<br><small>${m.date}</small></th>`;
+            });
+            headerHTML += `</tr></thead>`;
+
+            let bodyHTML = `<tbody>`;
+            PLAYERS.forEach(p => {
+                bodyHTML += `<tr><td class="player-name">${p}</td>`;
+                MATCHES.forEach(m => {
+                    const st = (attendanceData[m.id] || {})[p];
+                    let icon = '-';
+                    let cssClass = 'st-none';
+                    if (st === 'YES') { icon = '✓'; cssClass = 'st-yes'; }
+                    else if (st === 'NO') { icon = '✕'; cssClass = 'st-no'; }
+                    else if (st === 'MAYBE') { icon = '?'; cssClass = 'st-maybe'; }
+                    
+                    bodyHTML += `<td class="${cssClass}">${icon}</td>`;
+                });
+                bodyHTML += `</tr>`;
+            });
+
+            bodyHTML += `<tr style="background:#f1f5f9; font-weight:bold;"><td class="player-name">Tot. Si</td>`;
+            MATCHES.forEach(m => {
+                const count = PLAYERS.filter(p => (attendanceData[m.id] || {})[p] === 'YES').length;
+                bodyHTML += `<td style="color:var(--success)">${count}</td>`;
+            });
+            bodyHTML += `</tr></tbody>`;
+
+            table.innerHTML = headerHTML + bodyHTML;
+        }
+
+        initUserGrid();
+    </script>
+</body>
+</html>
