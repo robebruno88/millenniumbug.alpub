@@ -97,7 +97,7 @@
             box-shadow: 0 0 8px #30d158;
         }
 
-        /* Home Navigation (Partite / Allenamenti Switcher) */
+        /* Home Navigation (Partite vs Allenamenti Switcher) */
         .home-nav-container {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -264,6 +264,11 @@
             background: #ffffff;
             font-size: 0.85rem;
             outline: none;
+            color: var(--text);
+        }
+
+        select.input-field {
+            cursor: pointer;
         }
 
         .btn-add {
@@ -434,7 +439,7 @@
     <!-- Home Switcher: Partite vs Allenamenti -->
     <div id="homeNav" class="home-nav-container hidden">
         <button id="btnSectionMatches" class="home-nav-btn active" onclick="switchSection('matches')">🏆 Partite</button>
-        <button id="btnSectionTrainings" class="home-nav-btn" onclick="switchSection('trainings')">🏋️️ Allenamenti</button>
+        <button id="btnSectionTrainings" class="home-nav-btn" onclick="switchSection('trainings')">🏋 Allenamenti</button>
     </div>
 
     <!-- Sub-tabs: Mie Presenze vs Tabella Squadra -->
@@ -454,12 +459,16 @@
         <div class="user-grid" id="userGrid"></div>
     </div>
 
-    <!-- Sezione Allenamenti: Modulo di Aggiunta -->
+    <!-- Sezione Allenamenti: Modulo di Aggiunta con Selettore Palestra -->
     <div id="addTrainingSection" class="add-training-card hidden">
         <h3>➕ Aggiungi Nuovo Allenamento</h3>
         <div class="form-row">
             <input type="date" id="newTrainDate" class="input-field">
-            <input type="text" id="newTrainLocation" class="input-field" placeholder="Luogo / Palestra" value="Palestra Rosalba Carriera">
+            <select id="newTrainLocation" class="input-field">
+                <option value="Rinascita" selected>Rinascita</option>
+                <option value="Narcisi">Narcisi</option>
+                <option value="De Nicola">De Nicola</option>
+            </select>
             <button class="btn-add" onclick="createTraining()">Crea Allenamento</button>
         </div>
     </div>
@@ -591,7 +600,7 @@
 
         function createTraining() {
             const dateVal = document.getElementById('newTrainDate').value;
-            const locationVal = document.getElementById('newTrainLocation').value.trim();
+            const locationVal = document.getElementById('newTrainLocation').value;
 
             if (!dateVal) {
                 alert("Seleziona una data per l'allenamento.");
@@ -603,7 +612,7 @@
             newRef.set({
                 title: "Allenamento",
                 date: formattedDate,
-                location: locationVal || "Palestra"
+                location: locationVal
             });
 
             document.getElementById('newTrainDate').value = "";
