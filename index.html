@@ -180,7 +180,7 @@
             color: var(--text-secondary);
         }
 
-        /* Home Navigation */
+        /* Home Navigation (Partite vs Allenamenti) */
         .home-nav-container {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -242,7 +242,7 @@
             box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12);
         }
 
-        /* User Bar */
+        /* User Bar e Tasto Avversari Discreto */
         .user-bar {
             display: flex;
             justify-content: space-between;
@@ -251,24 +251,47 @@
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             color: var(--text);
-            padding: 12px 18px;
+            padding: 10px 16px;
             border-radius: var(--radius-md);
             margin-bottom: 20px;
             font-weight: 500;
-            font-size: 0.9rem;
+            font-size: 0.88rem;
             border: 1px solid var(--border);
             box-shadow: var(--shadow-sm);
+        }
+
+        .user-bar-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
         }
 
         .btn-switch {
             background: var(--accent-light);
             color: var(--accent);
             border: none;
-            padding: 6px 14px;
+            padding: 6px 12px;
             border-radius: 20px;
             cursor: pointer;
-            font-size: 0.8rem;
+            font-size: 0.78rem;
             font-weight: 600;
+        }
+
+        .btn-subtle {
+            background: rgba(120, 120, 128, 0.12);
+            color: var(--text-secondary);
+            border: none;
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.78rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .btn-subtle.active {
+            background: var(--text);
+            color: #ffffff;
         }
 
         /* User Selection Screen */
@@ -467,6 +490,73 @@
             line-height: 1.5;
         }
 
+        /* Opponents Card Styling */
+        .opponent-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: var(--radius-lg);
+            padding: 18px;
+            margin-bottom: 16px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .opponent-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .opponent-name {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .opponent-details {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 14px;
+        }
+
+        .opponent-actions {
+            display: flex;
+            gap: 10px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 10px 12px;
+            border-radius: var(--radius-md);
+            font-size: 0.82rem;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: opacity 0.2s;
+        }
+
+        .action-btn:hover {
+            opacity: 0.88;
+        }
+
+        .btn-whatsapp {
+            background: #25d366;
+            color: white;
+        }
+
+        .btn-email {
+            background: var(--accent);
+            color: white;
+        }
+
         /* Matrix Table */
         .matrix-container {
             overflow-x: auto;
@@ -519,6 +609,15 @@
         </div>
     </header>
 
+    <!-- Bar dell'utente con opzione discreta "Avversari" -->
+    <div id="userBar" class="user-bar hidden">
+        <span>Giocatore: <strong id="currentUserName">---</strong></span>
+        <div class="user-bar-actions">
+            <button id="btnSectionOpponents" class="btn-subtle" onclick="toggleOpponents()">👥 Avversari</button>
+            <button class="btn-switch" onclick="switchUser()">Cambia</button>
+        </div>
+    </div>
+
     <!-- Widget Prossimi Eventi -->
     <div id="upcomingWidget" class="widget-upcoming hidden">
         <div class="widget-upcoming-title">
@@ -527,7 +626,7 @@
         <div id="upcomingGrid" class="upcoming-grid"></div>
     </div>
 
-    <!-- Home Switcher: Partite vs Allenamenti -->
+    <!-- Home Switcher Principale (Solo Partite e Allenamenti) -->
     <div id="homeNav" class="home-nav-container hidden">
         <button id="btnSectionMatches" class="home-nav-btn active" onclick="switchSection('matches')">🏆 Partite</button>
         <button id="btnSectionTrainings" class="home-nav-btn" onclick="switchSection('trainings')">🏋 Allenamenti</button>
@@ -537,11 +636,6 @@
     <div id="navTabs" class="nav-tabs hidden">
         <button id="tabMyBtn" class="tab-btn active" onclick="switchTab('my')">✏️ Le Mie Presenze</button>
         <button id="tabTeamBtn" class="tab-btn" onclick="switchTab('team')">📊 Tabella Squadra</button>
-    </div>
-
-    <div id="userBar" class="user-bar hidden">
-        <span>Giocatore: <strong id="currentUserName">---</strong></span>
-        <button class="btn-switch" onclick="switchUser()">Cambia Giocatore</button>
     </div>
 
     <div id="userSelectionScreen">
@@ -565,6 +659,9 @@
     </div>
 
     <main id="itemsContainer" class="hidden"></main>
+
+    <!-- Contenitore Squadre Avversarie -->
+    <div id="opponentsContainer" class="hidden"></div>
 
     <div id="matrixContainer" class="matrix-container hidden">
         <table class="matrix" id="matrixTable"></table>
@@ -592,7 +689,6 @@
             "Kiki", "Marti", "Paul", "Rob", "Vanni", "Waiz"
         ];
 
-        // Manteniamo gli ID numerici originali (1, 2, 3...) per preservare le risposte inserite su Firebase
         const MATCHES = [
             { id: 1, type: 'match', round: "Andata", date: "08/10", title: "vs ASCOT TRIANTE NSC", location: "VIA ROSALBA CARRIERA 14, MILANO" },
             { id: 2, type: 'match', round: "Andata", date: "15/10", title: "ZERONOVE 172 vs MB", location: "VIA VALVASSORI PERONI 48, MILANO" },
@@ -610,8 +706,88 @@
             { id: 14, type: 'match', round: "Ritorno", date: "12/02", title: "POL. FUTURA vs MB", location: "VIA DA VINCI 18, PADERNO DUGNANO" }
         ];
 
+        const OPPONENTS = [
+            {
+                name: "VITTORINI",
+                manager: "BONAVINI LUCA CARLO",
+                phone: "3409772637",
+                email: "luckyluke.71@libero.it",
+                colors: "NERO ARANCIONE",
+                gym: "SCUOLA MEDIA GRAMSCI",
+                address: "VIA TOSI 21, MILANO",
+                homeGame: "GIOVEDI 21:30",
+                waLink: "https://wa.me/393409772637"
+            },
+            {
+                name: "PANTIGLIATE POLISPORTIVA",
+                manager: "NEGRINI ELISABETTA",
+                phone: "3475424234",
+                email: "superbetty11@yahoo.it",
+                colors: "BIANCO-ROSSO",
+                gym: "PALAZZETTO DELLO SPORT",
+                address: "VIA STELLA POLARE 11/A, MEDIGLIA",
+                homeGame: "MARTEDI 21:30",
+                waLink: "https://wa.me/393475424234"
+            },
+            {
+                name: "POLISPORTIVA FUTURA",
+                manager: "SPREGGIARO SILVIA",
+                phone: "3201646290",
+                email: "spreggi@gmail.com",
+                colors: "VERDE/BLU",
+                gym: "PALESTRA ITC GADDA",
+                address: "VIA DA VINCI 18, PADERNO DUGNANO",
+                homeGame: "VENERDI 21:15",
+                waLink: "https://wa.me/393201646290"
+            },
+            {
+                name: "ZERONOVE 172",
+                manager: "GALLI MASSIMO",
+                phone: "3939999896",
+                email: "laserpe73@yahoo.it",
+                colors: "NERA",
+                gym: "CENTRO CRESPI",
+                address: "VIA VALVASSORI PERONI 48, MILANO",
+                homeGame: "GIOVEDI 21:15",
+                waLink: "https://wa.me/393939999896"
+            },
+            {
+                name: "CAMPAGNOLA DON BOSCO",
+                manager: "MARTELLI ALESSANDRO",
+                phone: "3469475325",
+                email: "martelli.ale94@gmail.com",
+                colors: "ARANCIONE",
+                gym: "PALESTRA SCUOLE ELEMENTARI",
+                address: "VIA TARRA 8, LISSONE",
+                homeGame: "DOMENICA 20:30",
+                waLink: "https://wa.me/393469475325"
+            },
+            {
+                name: "S.GIORGIO LIMITO SGL",
+                manager: "SANDRINI CLAUDIA",
+                phone: "3275797750",
+                email: "claudiasandrini@hotmail.com",
+                colors: "GIALLA",
+                gym: "PALAZZETTO DELLO SPORT",
+                address: "P.ZA DON MILANI, PIOLTELLO",
+                homeGame: "GIOVEDI 21:30",
+                waLink: "https://wa.me/393275797750"
+            },
+            {
+                name: "ASCOT TRIANTE NSC",
+                manager: "NITRO GIUSEPPE",
+                phone: "3355625997",
+                email: "giuseppe.nitro@gmail.com",
+                colors: "BLU/ARANCIO",
+                gym: "PALA DELTA T",
+                address: "VIA DUCA D'AOSTA 8/A, MONZA",
+                homeGame: "DOMENICA 20:30",
+                waLink: "https://wa.me/393355625997"
+            }
+        ];
+
         let currentUser = localStorage.getItem('mb_user') || null;
-        let activeSection = 'matches'; // 'matches' | 'trainings'
+        let activeSection = 'matches'; // 'matches' | 'trainings' | 'opponents'
         let activeTab = 'my';         // 'my' | 'team'
         let attendanceData = {};
         let customTrainings = [];
@@ -643,7 +819,6 @@
             document.getElementById('userSelectionScreen').classList.add('hidden');
             document.getElementById('upcomingWidget').classList.remove('hidden');
             document.getElementById('homeNav').classList.remove('hidden');
-            document.getElementById('navTabs').classList.remove('hidden');
             document.getElementById('userBar').classList.remove('hidden');
             switchSection(activeSection);
         }
@@ -658,13 +833,30 @@
             document.getElementById('userBar').classList.add('hidden');
             document.getElementById('addTrainingSection').classList.add('hidden');
             document.getElementById('itemsContainer').classList.add('hidden');
+            document.getElementById('opponentsContainer').classList.add('hidden');
             document.getElementById('matrixContainer').classList.add('hidden');
+        }
+
+        function toggleOpponents() {
+            if (activeSection === 'opponents') {
+                switchSection('matches');
+            } else {
+                switchSection('opponents');
+            }
         }
 
         function switchSection(section) {
             activeSection = section;
+            
             document.getElementById('btnSectionMatches').classList.toggle('active', section === 'matches');
             document.getElementById('btnSectionTrainings').classList.toggle('active', section === 'trainings');
+            document.getElementById('btnSectionOpponents').classList.toggle('active', section === 'opponents');
+
+            // Nascondi home nav e tabs se siamo in modalità Avversari
+            document.getElementById('navTabs').classList.toggle('hidden', section === 'opponents');
+            document.getElementById('upcomingWidget').classList.toggle('hidden', section === 'opponents');
+            document.getElementById('homeNav').classList.toggle('hidden', section === 'opponents');
+
             refreshUI();
         }
 
@@ -678,19 +870,27 @@
         function refreshUI() {
             if (!currentUser) return;
 
-            renderUpcomingWidget();
-
             const isTrainings = activeSection === 'trainings';
-            document.getElementById('addTrainingSection').classList.toggle('hidden', !isTrainings || activeTab !== 'my');
+            const isOpponents = activeSection === 'opponents';
 
-            if (activeTab === 'my') {
-                document.getElementById('itemsContainer').classList.remove('hidden');
-                document.getElementById('matrixContainer').classList.add('hidden');
-                renderItems();
-            } else {
+            document.getElementById('addTrainingSection').classList.toggle('hidden', !isTrainings || activeTab !== 'my');
+            document.getElementById('opponentsContainer').classList.toggle('hidden', !isOpponents);
+
+            if (isOpponents) {
                 document.getElementById('itemsContainer').classList.add('hidden');
-                document.getElementById('matrixContainer').classList.remove('hidden');
-                renderMatrix();
+                document.getElementById('matrixContainer').classList.add('hidden');
+                renderOpponents();
+            } else {
+                renderUpcomingWidget();
+                if (activeTab === 'my') {
+                    document.getElementById('itemsContainer').classList.remove('hidden');
+                    document.getElementById('matrixContainer').classList.add('hidden');
+                    renderItems();
+                } else {
+                    document.getElementById('itemsContainer').classList.add('hidden');
+                    document.getElementById('matrixContainer').classList.remove('hidden');
+                    renderMatrix();
+                }
             }
         }
 
@@ -821,6 +1021,36 @@
                     </div>
                 `;
             }).join('');
+        }
+
+        function renderOpponents() {
+            const container = document.getElementById('opponentsContainer');
+            container.innerHTML = `
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+                    <h3 style="font-size:1.1rem; font-weight:700;">Squadre Avversarie</h3>
+                    <button class="btn-subtle" onclick="switchSection('matches')">✕ Chiudi</button>
+                </div>
+            ` + OPPONENTS.map(opp => `
+                <div class="opponent-card">
+                    <div class="opponent-header">
+                        <div class="opponent-name">${opp.name}</div>
+                        <span class="badge" style="background:var(--accent-light); color:var(--accent);">${opp.colors}</span>
+                    </div>
+                    <div class="opponent-details">
+                        👤 <strong>Responsabile:</strong> ${opp.manager}<br>
+                        📍 <strong>Palestra:</strong> ${opp.gym} (${opp.address})<br>
+                        🕒 <strong>Casa:</strong> ${opp.homeGame}
+                    </div>
+                    <div class="opponent-actions">
+                        <a href="${opp.waLink}" target="_blank" class="action-btn btn-whatsapp">
+                            💬 WhatsApp
+                        </a>
+                        <a href="mailto:${opp.email}" class="action-btn btn-email">
+                            ✉️ Email
+                        </a>
+                    </div>
+                </div>
+            `).join('');
         }
 
         function renderMatrix() {
