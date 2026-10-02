@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="it">
 <head>
@@ -13,8 +12,7 @@
     <style>
         :root {
             --bg-primary: #f2f2f7;
-            --card-bg: rgba(255, 255, 255, 0.85);
-            --card-border: rgba(255, 255, 255, 0.6);
+            --card-bg: rgba(255, 255, 255, 0.88);
             --accent: #007aff;
             --accent-hover: #0062cc;
             --accent-light: #e5f1ff;
@@ -51,41 +49,29 @@
             padding-bottom: 60px;
         }
 
-        /* Header in stile iOS Banner */
+        /* Header Apple Style */
         header {
             text-align: center;
-            margin-bottom: 24px;
+            margin-bottom: 20px;
             background: linear-gradient(135deg, #007aff, #5856d6);
             color: white;
-            padding: 28px 20px;
+            padding: 24px 20px;
             border-radius: var(--radius-lg);
             box-shadow: 0 10px 30px rgba(0, 122, 255, 0.25);
             position: relative;
             overflow: hidden;
         }
 
-        header::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 60%);
-            pointer-events: none;
-        }
-
         header h1 {
-            font-size: 1.6rem;
+            font-size: 1.5rem;
             font-weight: 700;
             letter-spacing: -0.5px;
             margin-bottom: 4px;
         }
 
         header p {
-            opacity: 0.85;
-            font-size: 0.88rem;
-            font-weight: 400;
+            opacity: 0.88;
+            font-size: 0.85rem;
         }
 
         .sync-badge {
@@ -95,11 +81,11 @@
             background: rgba(255, 255, 255, 0.2);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
-            padding: 5px 12px;
+            padding: 4px 12px;
             border-radius: 20px;
             font-size: 0.75rem;
             font-weight: 500;
-            margin-top: 12px;
+            margin-top: 10px;
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
@@ -111,7 +97,38 @@
             box-shadow: 0 0 8px #30d158;
         }
 
-        /* Segmented Control (Apple Style Tab Bar) */
+        /* Home Navigation (Partite / Allenamenti Switcher) */
+        .home-nav-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .home-nav-btn {
+            background: var(--card-bg);
+            border: 2px solid var(--border);
+            padding: 14px;
+            border-radius: var(--radius-lg);
+            text-align: center;
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .home-nav-btn.active {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+            box-shadow: 0 6px 16px rgba(0, 122, 255, 0.3);
+        }
+
+        /* Segmented Control (Apple Style Tab Bar Interno) */
         .nav-tabs {
             display: flex;
             background: rgba(120, 120, 128, 0.12);
@@ -124,7 +141,7 @@
 
         .tab-btn {
             flex: 1;
-            padding: 9px 12px;
+            padding: 8px 12px;
             background: transparent;
             color: var(--text);
             border: none;
@@ -133,13 +150,13 @@
             cursor: pointer;
             font-size: 0.85rem;
             text-align: center;
-            transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+            transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
         .tab-btn.active {
             background: #ffffff;
             color: var(--text);
-            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12), 0 3px 1px rgba(0, 0, 0, 0.04);
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12);
         }
 
         /* User Bar */
@@ -169,11 +186,6 @@
             cursor: pointer;
             font-size: 0.8rem;
             font-weight: 600;
-            transition: background 0.2s;
-        }
-
-        .btn-switch:hover {
-            background: #d0e4ff;
         }
 
         /* User Selection Screen */
@@ -188,12 +200,6 @@
             box-shadow: var(--shadow-md);
         }
 
-        #userSelectionScreen h2 {
-            font-size: 1.3rem;
-            font-weight: 700;
-            margin-bottom: 6px;
-        }
-
         .user-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
@@ -205,7 +211,7 @@
             background: #ffffff;
             border: 1px solid var(--border);
             color: var(--text);
-            padding: 14px 8px;
+            padding: 12px 8px;
             border-radius: var(--radius-md);
             font-weight: 600;
             font-size: 0.9rem;
@@ -215,15 +221,69 @@
         }
 
         .user-btn:hover {
-            border-color: var(--accent);
             background: var(--accent);
             color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(0, 122, 255, 0.25);
+            border-color: var(--accent);
         }
 
-        /* Match Cards */
-        .match-card {
+        /* Add Training Form Card */
+        .add-training-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: var(--radius-lg);
+            padding: 18px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .add-training-card h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--text);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr auto;
+            gap: 10px;
+        }
+
+        @media (max-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .input-field {
+            padding: 10px 12px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+            background: #ffffff;
+            font-size: 0.85rem;
+            outline: none;
+        }
+
+        .btn-add {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-add:hover {
+            background: var(--accent-hover);
+        }
+
+        /* Match / Training Cards */
+        .item-card {
             background: var(--card-bg);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
@@ -232,14 +292,9 @@
             margin-bottom: 16px;
             border: 1px solid var(--border);
             box-shadow: var(--shadow-sm);
-            transition: transform 0.2s, box-shadow 0.2s;
         }
 
-        .match-card:hover {
-            box-shadow: var(--shadow-md);
-        }
-
-        .match-header {
+        .item-header {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
@@ -247,14 +302,13 @@
             gap: 10px;
         }
 
-        .match-title {
+        .item-title {
             font-size: 1.05rem;
             font-weight: 700;
             color: var(--text);
-            letter-spacing: -0.3px;
         }
 
-        .match-info {
+        .item-info {
             font-size: 0.82rem;
             color: var(--text-secondary);
             margin-top: 4px;
@@ -268,6 +322,16 @@
             font-size: 0.72rem;
             font-weight: 600;
             white-space: nowrap;
+        }
+
+        .btn-delete {
+            background: none;
+            border: none;
+            color: var(--danger);
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-left: 8px;
         }
 
         /* Option Buttons */
@@ -293,28 +357,10 @@
             transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
-        .opt-btn.yes.active {
-            background: var(--success);
-            color: #ffffff;
-            border-color: var(--success);
-            box-shadow: 0 4px 12px rgba(52, 199, 89, 0.3);
-        }
+        .opt-btn.yes.active { background: var(--success); color: #ffffff; border-color: var(--success); box-shadow: 0 4px 12px rgba(52, 199, 89, 0.3); }
+        .opt-btn.no.active { background: var(--danger); color: #ffffff; border-color: var(--danger); box-shadow: 0 4px 12px rgba(255, 59, 48, 0.3); }
+        .opt-btn.maybe.active { background: var(--warning); color: #ffffff; border-color: var(--warning); box-shadow: 0 4px 12px rgba(255, 149, 0, 0.3); }
 
-        .opt-btn.no.active {
-            background: var(--danger);
-            color: #ffffff;
-            border-color: var(--danger);
-            box-shadow: 0 4px 12px rgba(255, 59, 48, 0.3);
-        }
-
-        .opt-btn.maybe.active {
-            background: var(--warning);
-            color: #ffffff;
-            border-color: var(--warning);
-            box-shadow: 0 4px 12px rgba(255, 149, 0, 0.3);
-        }
-
-        /* Team Summary Inside Cards */
         .team-summary {
             margin-top: 12px;
             font-size: 0.8rem;
@@ -333,11 +379,7 @@
             line-height: 1.5;
         }
 
-        .summary-details strong {
-            color: var(--text);
-        }
-
-        /* Table Matrix */
+        /* Matrix Table */
         .matrix-container {
             overflow-x: auto;
             background: var(--card-bg);
@@ -360,11 +402,6 @@
             padding: 10px 8px;
             border: 1px solid var(--border);
             min-width: 48px;
-        }
-
-        table.matrix th {
-            font-weight: 600;
-            color: var(--text-secondary);
         }
 
         table.matrix th.player-col, table.matrix td.player-name {
@@ -394,9 +431,16 @@
         </div>
     </header>
 
+    <!-- Home Switcher: Partite vs Allenamenti -->
+    <div id="homeNav" class="home-nav-container hidden">
+        <button id="btnSectionMatches" class="home-nav-btn active" onclick="switchSection('matches')">🏆 Partite</button>
+        <button id="btnSectionTrainings" class="home-nav-btn" onclick="switchSection('trainings')">🏋️️ Allenamenti</button>
+    </div>
+
+    <!-- Sub-tabs: Mie Presenze vs Tabella Squadra -->
     <div id="navTabs" class="nav-tabs hidden">
         <button id="tabMyBtn" class="tab-btn active" onclick="switchTab('my')">✏️ Le Mie Presenze</button>
-        <button id="tabTeamBtn" class="tab-btn" onclick="switchTab('team')">📊 Tabella Presenze Squadra</button>
+        <button id="tabTeamBtn" class="tab-btn" onclick="switchTab('team')">📊 Tabella Squadra</button>
     </div>
 
     <div id="userBar" class="user-bar hidden">
@@ -410,7 +454,17 @@
         <div class="user-grid" id="userGrid"></div>
     </div>
 
-    <main id="matchesContainer" class="hidden"></main>
+    <!-- Sezione Allenamenti: Modulo di Aggiunta -->
+    <div id="addTrainingSection" class="add-training-card hidden">
+        <h3>➕ Aggiungi Nuovo Allenamento</h3>
+        <div class="form-row">
+            <input type="date" id="newTrainDate" class="input-field">
+            <input type="text" id="newTrainLocation" class="input-field" placeholder="Luogo / Palestra" value="Palestra Rosalba Carriera">
+            <button class="btn-add" onclick="createTraining()">Crea Allenamento</button>
+        </div>
+    </div>
+
+    <main id="itemsContainer" class="hidden"></main>
 
     <div id="matrixContainer" class="matrix-container hidden">
         <table class="matrix" id="matrixTable"></table>
@@ -429,11 +483,9 @@
             measurementId: "G-VD2ZFG3HE2"
         };
 
-        // Inizializzazione Firebase
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        // Elenco Giocatori Aggiornato (16)
         const PLAYERS = [
             "Alby", "Angy", "Anto", "Dani", "Fra", 
             "Gianlu", "Gio", "Giuly", "Ila", "Jack", 
@@ -441,33 +493,38 @@
         ];
 
         const MATCHES = [
-            { id: 1, round: "Andata", date: "08/10", title: "vs ASCOT TRIANTE NSC", location: "VIA ROSALBA CARRIERA 14, MILANO" },
-            { id: 2, round: "Andata", date: "15/10", title: "ZERONOVE 172 vs MB", location: "VIA VALVASSORI PERONI 48, MILANO" },
-            { id: 3, round: "Andata", date: "22/10", title: "CAMPAGNOLA vs MB", location: "VIA TARRA 8, LISSONE" },
-            { id: 4, round: "Andata", date: "29/10", title: "S.GIORGIO LIMITO vs MB", location: "P.ZA DON MILANI, PIOLTELLO" },
-            { id: 5, round: "Andata", date: "05/11", title: "VITTORINI vs MB", location: "VIA TOSI 21, MILANO" },
-            { id: 6, round: "Andata", date: "10/11", title: "PANTIGLIATE vs MB", location: "VIA STELLA POLARE 11/A, MEDIGLIA" },
-            { id: 7, round: "Andata", date: "19/11", title: "vs POLISPORTIVA FUTURA", location: "VIA ROSALBA CARRIERA 14, MILANO" },
-            { id: 8, round: "Ritorno", date: "29/11", title: "ASCOT TRIANTE vs MB", location: "VIA DUCA D'AOSTA 8/A, MONZA" },
-            { id: 9, round: "Ritorno", date: "10/12", title: "vs ZERONOVE 172", location: "VIA ROSALBA CARRIERA 14, MILANO" },
-            { id: 10, round: "Ritorno", date: "17/01", title: "vs CAMPAGNOLA DON BOSCO", location: "VIA ROSALBA CARRIERA 14, MILANO" },
-            { id: 11, round: "Ritorno", date: "21/01", title: "vs S.GIORGIO LIMITO SGL", location: "VIA ROSALBA CARRIERA 14, MILANO" },
-            { id: 12, round: "Ritorno", date: "28/01", title: "vs VITTORINI", location: "VIA ROSALBA CARRIERA 14, MILANO" },
-            { id: 13, round: "Ritorno", date: "04/02", title: "vs PANTIGLIATE POL.", location: "VIA ROSALBA CARRIERA 14, MILANO" },
-            { id: 14, round: "Ritorno", date: "12/02", title: "POL. FUTURA vs MB", location: "VIA DA VINCI 18, PADERNO DUGNANO" }
+            { id: 'm1', round: "Andata", date: "08/10", title: "vs ASCOT TRIANTE NSC", location: "VIA ROSALBA CARRIERA 14, MILANO" },
+            { id: 'm2', round: "Andata", date: "15/10", title: "ZERONOVE 172 vs MB", location: "VIA VALVASSORI PERONI 48, MILANO" },
+            { id: 'm3', round: "Andata", date: "22/10", title: "CAMPAGNOLA vs MB", location: "VIA TARRA 8, LISSONE" },
+            { id: 'm4', round: "Andata", date: "29/10", title: "S.GIORGIO LIMITO vs MB", location: "P.ZA DON MILANI, PIOLTELLO" },
+            { id: 'm5', round: "Andata", date: "05/11", title: "VITTORINI vs MB", location: "VIA TOSI 21, MILANO" },
+            { id: 'm6', round: "Andata", date: "10/11", title: "PANTIGLIATE vs MB", location: "VIA STELLA POLARE 11/A, MEDIGLIA" },
+            { id: 'm7', round: "Andata", date: "19/11", title: "vs POLISPORTIVA FUTURA", location: "VIA ROSALBA CARRIERA 14, MILANO" },
+            { id: 'm8', round: "Ritorno", date: "29/11", title: "ASCOT TRIANTE vs MB", location: "VIA DUCA D'AOSTA 8/A, MONZA" },
+            { id: 'm9', round: "Ritorno", date: "10/12", title: "vs ZERONOVE 172", location: "VIA ROSALBA CARRIERA 14, MILANO" },
+            { id: 'm10', round: "Ritorno", date: "17/01", title: "vs CAMPAGNOLA DON BOSCO", location: "VIA ROSALBA CARRIERA 14, MILANO" },
+            { id: 'm11', round: "Ritorno", date: "21/01", title: "vs S.GIORGIO LIMITO SGL", location: "VIA ROSALBA CARRIERA 14, MILANO" },
+            { id: 'm12', round: "Ritorno", date: "28/01", title: "vs VITTORINI", location: "VIA ROSALBA CARRIERA 14, MILANO" },
+            { id: 'm13', round: "Ritorno", date: "04/02", title: "vs PANTIGLIATE POL.", location: "VIA ROSALBA CARRIERA 14, MILANO" },
+            { id: 'm14', round: "Ritorno", date: "12/02", title: "POL. FUTURA vs MB", location: "VIA DA VINCI 18, PADERNO DUGNANO" }
         ];
 
         let currentUser = localStorage.getItem('mb_user') || null;
-        let activeTab = 'my';
+        let activeSection = 'matches'; // 'matches' | 'trainings'
+        let activeTab = 'my';         // 'my' | 'team'
         let attendanceData = {};
+        let customTrainings = [];
 
-        // Sincronizzazione in TEMPO REALE
+        // Sincronizzazione Realtime Firebase
         db.ref('attendance').on('value', (snapshot) => {
             attendanceData = snapshot.val() || {};
-            if (currentUser) {
-                if (activeTab === 'my') renderMatches();
-                else renderMatrix();
-            }
+            refreshUI();
+        });
+
+        db.ref('trainings').on('value', (snapshot) => {
+            const data = snapshot.val() || {};
+            customTrainings = Object.keys(data).map(key => ({ id: key, ...data[key] }));
+            refreshUI();
         });
 
         function initUserGrid() {
@@ -483,73 +540,132 @@
             localStorage.setItem('mb_user', userName);
             document.getElementById('currentUserName').innerText = userName;
             document.getElementById('userSelectionScreen').classList.add('hidden');
+            document.getElementById('homeNav').classList.remove('hidden');
             document.getElementById('navTabs').classList.remove('hidden');
             document.getElementById('userBar').classList.remove('hidden');
-            switchTab('my');
+            switchSection(activeSection);
         }
 
         function switchUser() {
             currentUser = null;
             localStorage.removeItem('mb_user');
             document.getElementById('userSelectionScreen').classList.remove('hidden');
+            document.getElementById('homeNav').classList.add('hidden');
             document.getElementById('navTabs').classList.add('hidden');
             document.getElementById('userBar').classList.add('hidden');
-            document.getElementById('matchesContainer').classList.add('hidden');
+            document.getElementById('addTrainingSection').classList.add('hidden');
+            document.getElementById('itemsContainer').classList.add('hidden');
             document.getElementById('matrixContainer').classList.add('hidden');
+        }
+
+        function switchSection(section) {
+            activeSection = section;
+            document.getElementById('btnSectionMatches').classList.toggle('active', section === 'matches');
+            document.getElementById('btnSectionTrainings').classList.toggle('active', section === 'trainings');
+            refreshUI();
         }
 
         function switchTab(tab) {
             activeTab = tab;
             document.getElementById('tabMyBtn').classList.toggle('active', tab === 'my');
             document.getElementById('tabTeamBtn').classList.toggle('active', tab === 'team');
+            refreshUI();
+        }
 
-            if (tab === 'my') {
-                document.getElementById('matchesContainer').classList.remove('hidden');
+        function refreshUI() {
+            if (!currentUser) return;
+
+            const isTrainings = activeSection === 'trainings';
+            document.getElementById('addTrainingSection').classList.toggle('hidden', !isTrainings || activeTab !== 'my');
+
+            if (activeTab === 'my') {
+                document.getElementById('itemsContainer').classList.remove('hidden');
                 document.getElementById('matrixContainer').classList.add('hidden');
-                renderMatches();
+                renderItems();
             } else {
-                document.getElementById('matchesContainer').classList.add('hidden');
+                document.getElementById('itemsContainer').classList.add('hidden');
                 document.getElementById('matrixContainer').classList.remove('hidden');
                 renderMatrix();
             }
         }
 
-        function setPresence(matchId, status) {
-            if (!currentUser) return;
-            const currentStatus = (attendanceData[matchId] || {})[currentUser];
-            const newStatus = (currentStatus === status) ? null : status;
+        function createTraining() {
+            const dateVal = document.getElementById('newTrainDate').value;
+            const locationVal = document.getElementById('newTrainLocation').value.trim();
 
-            if (newStatus === null) {
-                db.ref(`attendance/${matchId}/${currentUser}`).remove();
-            } else {
-                db.ref(`attendance/${matchId}/${currentUser}`).set(newStatus);
+            if (!dateVal) {
+                alert("Seleziona una data per l'allenamento.");
+                return;
+            }
+
+            const formattedDate = dateVal.split('-').reverse().slice(0, 2).join('/');
+            const newRef = db.ref('trainings').push();
+            newRef.set({
+                title: "Allenamento",
+                date: formattedDate,
+                location: locationVal || "Palestra"
+            });
+
+            document.getElementById('newTrainDate').value = "";
+        }
+
+        function deleteTraining(id) {
+            if (confirm("Vuoi davvero eliminare questo allenamento?")) {
+                db.ref(`trainings/${id}`).remove();
+                db.ref(`attendance/${id}`).remove();
             }
         }
 
-        function renderMatches() {
-            const container = document.getElementById('matchesContainer');
-            container.innerHTML = MATCHES.map(m => {
-                const matchData = attendanceData[m.id] || {};
-                const userStatus = matchData[currentUser];
+        function setPresence(itemId, status) {
+            if (!currentUser) return;
+            const currentStatus = (attendanceData[itemId] || {})[currentUser];
+            const newStatus = (currentStatus === status) ? null : status;
 
-                const yesList = PLAYERS.filter(p => matchData[p] === 'YES');
-                const noList = PLAYERS.filter(p => matchData[p] === 'NO');
-                const maybeList = PLAYERS.filter(p => matchData[p] === 'MAYBE');
+            if (newStatus === null) {
+                db.ref(`attendance/${itemId}/${currentUser}`).remove();
+            } else {
+                db.ref(`attendance/${itemId}/${currentUser}`).set(newStatus);
+            }
+        }
+
+        function getActiveList() {
+            return activeSection === 'matches' ? MATCHES : customTrainings;
+        }
+
+        function renderItems() {
+            const list = getActiveList();
+            const container = document.getElementById('itemsContainer');
+
+            if (list.length === 0) {
+                container.innerHTML = `<div style="text-align:center; padding: 40px; color: var(--text-secondary);">Nessun elemento presente.</div>`;
+                return;
+            }
+
+            container.innerHTML = list.map(item => {
+                const itemData = attendanceData[item.id] || {};
+                const userStatus = itemData[currentUser];
+
+                const yesList = PLAYERS.filter(p => itemData[p] === 'YES');
+                const noList = PLAYERS.filter(p => itemData[p] === 'NO');
+                const maybeList = PLAYERS.filter(p => itemData[p] === 'MAYBE');
 
                 return `
-                    <div class="match-card">
-                        <div class="match-header">
+                    <div class="item-card">
+                        <div class="item-header">
                             <div>
-                                <div class="match-title">${m.title}</div>
-                                <div class="match-info">📅 ${m.date} | 📍 ${m.location}</div>
+                                <div class="item-title">${item.title}</div>
+                                <div class="item-info">📅 ${item.date} | 📍 ${item.location}</div>
                             </div>
-                            <span class="badge">${m.round}</span>
+                            <div>
+                                ${item.round ? `<span class="badge">${item.round}</span>` : ''}
+                                ${activeSection === 'trainings' ? `<button class="btn-delete" onclick="deleteTraining('${item.id}')">Elimina</button>` : ''}
+                            </div>
                         </div>
 
                         <div class="status-options">
-                            <button class="opt-btn yes ${userStatus === 'YES' ? 'active' : ''}" onclick="setPresence(${m.id}, 'YES')">Ci sarò</button>
-                            <button class="opt-btn maybe ${userStatus === 'MAYBE' ? 'active' : ''}" onclick="setPresence(${m.id}, 'MAYBE')">In forse</button>
-                            <button class="opt-btn no ${userStatus === 'NO' ? 'active' : ''}" onclick="setPresence(${m.id}, 'NO')">Assente</button>
+                            <button class="opt-btn yes ${userStatus === 'YES' ? 'active' : ''}" onclick="setPresence('${item.id}', 'YES')">Ci sarò</button>
+                            <button class="opt-btn maybe ${userStatus === 'MAYBE' ? 'active' : ''}" onclick="setPresence('${item.id}', 'MAYBE')">In forse</button>
+                            <button class="opt-btn no ${userStatus === 'NO' ? 'active' : ''}" onclick="setPresence('${item.id}', 'NO')">Assente</button>
                         </div>
 
                         <div class="team-summary">
@@ -568,18 +684,25 @@
         }
 
         function renderMatrix() {
+            const list = getActiveList();
             const table = document.getElementById('matrixTable');
+
+            if (list.length === 0) {
+                table.innerHTML = `<tr><td style="padding:20px;">Nessun dato disponibile.</td></tr>`;
+                return;
+            }
+
             let headerHTML = `<thead><tr><th class="player-col">Giocatore</th>`;
-            MATCHES.forEach(m => {
-                headerHTML += `<th>P${m.id}<br><small style="font-weight:400;">${m.date}</small></th>`;
+            list.forEach((item, idx) => {
+                headerHTML += `<th>${activeSection === 'matches' ? 'P' + (idx+1) : 'A' + (idx+1)}<br><small style="font-weight:400;">${item.date}</small></th>`;
             });
             headerHTML += `</tr></thead>`;
 
             let bodyHTML = `<tbody>`;
             PLAYERS.forEach(p => {
                 bodyHTML += `<tr><td class="player-name">${p}</td>`;
-                MATCHES.forEach(m => {
-                    const st = (attendanceData[m.id] || {})[p];
+                list.forEach(item => {
+                    const st = (attendanceData[item.id] || {})[p];
                     let icon = '-';
                     let cssClass = 'st-none';
                     if (st === 'YES') { icon = '✓'; cssClass = 'st-yes'; }
@@ -592,8 +715,8 @@
             });
 
             bodyHTML += `<tr style="background:rgba(120, 120, 128, 0.08); font-weight:bold;"><td class="player-name">Tot. Sì</td>`;
-            MATCHES.forEach(m => {
-                const count = PLAYERS.filter(p => (attendanceData[m.id] || {})[p] === 'YES').length;
+            list.forEach(item => {
+                const count = PLAYERS.filter(p => (attendanceData[item.id] || {})[p] === 'YES').length;
                 bodyHTML += `<td style="color:var(--success)">${count}</td>`;
             });
             bodyHTML += `</tr></tbody>`;
