@@ -128,8 +128,9 @@
         }
 
         .upcoming-card {
-            background: rgba(255, 255, 255, 0.7);
-            border: 1px solid var(--border);
+            background: linear-gradient(135deg, rgba(229, 241, 255, 0.9), rgba(255, 255, 255, 0.95));
+            border: 2px solid var(--accent);
+            box-shadow: 0 4px 14px rgba(0, 122, 255, 0.15);
             border-radius: var(--radius-md);
             padding: 14px;
             position: relative;
@@ -142,12 +143,6 @@
             box-shadow: var(--shadow-sm);
         }
 
-        .upcoming-card.is-match {
-            background: linear-gradient(135deg, rgba(229, 241, 255, 0.9), rgba(255, 255, 255, 0.95));
-            border: 2px solid var(--accent);
-            box-shadow: 0 4px 14px rgba(0, 122, 255, 0.15);
-        }
-
         .upcoming-card-type {
             font-size: 0.72rem;
             font-weight: 700;
@@ -156,16 +151,8 @@
             border-radius: 10px;
             display: inline-block;
             margin-bottom: 6px;
-        }
-
-        .type-match {
             background: var(--accent);
             color: #ffffff;
-        }
-
-        .type-training {
-            background: rgba(120, 120, 128, 0.16);
-            color: var(--text-secondary);
         }
 
         .upcoming-card-title {
@@ -178,37 +165,6 @@
         .upcoming-card-info {
             font-size: 0.8rem;
             color: var(--text-secondary);
-        }
-
-        /* Home Navigation (Partite vs Allenamenti) */
-        .home-nav-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-bottom: 16px;
-        }
-
-        .home-nav-btn {
-            background: var(--card-bg);
-            border: 2px solid var(--border);
-            padding: 14px;
-            border-radius: var(--radius-lg);
-            text-align: center;
-            font-weight: 700;
-            font-size: 0.95rem;
-            color: var(--text-secondary);
-            cursor: pointer;
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
-            box-shadow: var(--shadow-sm);
-        }
-
-        .home-nav-btn.active {
-            background: var(--accent);
-            color: white;
-            border-color: var(--accent);
-            box-shadow: 0 6px 16px rgba(0, 122, 255, 0.3);
         }
 
         /* Segmented Control */
@@ -332,68 +288,7 @@
             border-color: var(--accent);
         }
 
-        /* Add Training Form Card */
-        .add-training-card {
-            background: var(--card-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-radius: var(--radius-lg);
-            padding: 18px;
-            margin-bottom: 20px;
-            border: 1px solid var(--border);
-            box-shadow: var(--shadow-sm);
-        }
-
-        .add-training-card h3 {
-            font-size: 1rem;
-            font-weight: 700;
-            margin-bottom: 12px;
-            color: var(--text);
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr auto;
-            gap: 10px;
-        }
-
-        @media (max-width: 600px) {
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .input-field {
-            padding: 10px 12px;
-            border-radius: var(--radius-md);
-            border: 1px solid var(--border);
-            background: #ffffff;
-            font-size: 0.85rem;
-            outline: none;
-            color: var(--text);
-        }
-
-        select.input-field {
-            cursor: pointer;
-        }
-
-        .btn-add {
-            background: var(--accent);
-            color: white;
-            border: none;
-            padding: 10px 18px;
-            border-radius: var(--radius-md);
-            font-weight: 600;
-            font-size: 0.85rem;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-
-        .btn-add:hover {
-            background: var(--accent-hover);
-        }
-
-        /* Match / Training Cards */
+        /* Match Cards */
         .item-card {
             background: var(--card-bg);
             backdrop-filter: blur(20px);
@@ -433,16 +328,6 @@
             font-size: 0.72rem;
             font-weight: 600;
             white-space: nowrap;
-        }
-
-        .btn-delete {
-            background: none;
-            border: none;
-            color: var(--danger);
-            cursor: pointer;
-            font-size: 0.8rem;
-            font-weight: 600;
-            margin-left: 8px;
         }
 
         /* Option Buttons */
@@ -618,18 +503,12 @@
         </div>
     </div>
 
-    <!-- Widget Prossimi Eventi -->
+    <!-- Widget Prossime Partite -->
     <div id="upcomingWidget" class="widget-upcoming hidden">
         <div class="widget-upcoming-title">
-            <span>⚡ Prossimi 2 Eventi</span>
+            <span>⚡ Prossime Partite</span>
         </div>
         <div id="upcomingGrid" class="upcoming-grid"></div>
-    </div>
-
-    <!-- Home Switcher Principale (Solo Partite e Allenamenti) -->
-    <div id="homeNav" class="home-nav-container hidden">
-        <button id="btnSectionMatches" class="home-nav-btn active" onclick="switchSection('matches')">🏆 Partite</button>
-        <button id="btnSectionTrainings" class="home-nav-btn" onclick="switchSection('trainings')">🏋 Allenamenti</button>
     </div>
 
     <!-- Sub-tabs: Mie Presenze vs Tabella Squadra -->
@@ -642,20 +521,6 @@
         <h2>Chi sei?</h2>
         <p style="color: var(--text-secondary); font-size: 0.88rem; margin-top: 4px;">Seleziona il tuo nome per accedere:</p>
         <div class="user-grid" id="userGrid"></div>
-    </div>
-
-    <!-- Sezione Allenamenti: Modulo di Aggiunta -->
-    <div id="addTrainingSection" class="add-training-card hidden">
-        <h3>➕ Aggiungi Nuovo Allenamento</h3>
-        <div class="form-row">
-            <input type="date" id="newTrainDate" class="input-field">
-            <select id="newTrainLocation" class="input-field">
-                <option value="Rinascita" selected>Rinascita</option>
-                <option value="Narcisi">Narcisi</option>
-                <option value="De Nicola">De Nicola</option>
-            </select>
-            <button class="btn-add" onclick="createTraining()">Crea Allenamento</button>
-        </div>
     </div>
 
     <main id="itemsContainer" class="hidden"></main>
@@ -690,20 +555,20 @@
         ];
 
         const MATCHES = [
-            { id: 1, type: 'match', round: "Andata", date: "08/10", title: "vs ASCOT TRIANTE NSC", location: "VIA ROSALBA CARRIERA 14, MILANO" },
-            { id: 2, type: 'match', round: "Andata", date: "15/10", title: "ZERONOVE 172 vs MB", location: "VIA VALVASSORI PERONI 48, MILANO" },
-            { id: 3, type: 'match', round: "Andata", date: "22/10", title: "CAMPAGNOLA vs MB", location: "VIA TARRA 8, LISSONE" },
-            { id: 4, type: 'match', round: "Andata", date: "29/10", title: "S.GIORGIO LIMITO vs MB", location: "P.ZA DON MILANI, PIOLTELLO" },
-            { id: 5, type: 'match', round: "Andata", date: "05/11", title: "VITTORINI vs MB", location: "VIA TOSI 21, MILANO" },
-            { id: 6, type: 'match', round: "Andata", date: "10/11", title: "PANTIGLIATE vs MB", location: "VIA STELLA POLARE 11/A, MEDIGLIA" },
-            { id: 7, type: 'match', round: "Andata", date: "19/11", title: "vs POLISPORTIVA FUTURA", location: "VIA ROSALBA CARRIERA 14, MILANO" },
-            { id: 8, type: 'match', round: "Ritorno", date: "29/11", title: "ASCOT TRIANTE vs MB", location: "VIA DUCA D'AOSTA 8/A, MONZA" },
-            { id: 9, type: 'match', round: "Ritorno", date: "10/12", title: "vs ZERONOVE 172", location: "VIA ROSALBA CARRIERA 14, MILANO" },
-            { id: 10, type: 'match', round: "Ritorno", date: "17/01", title: "vs CAMPAGNOLA DON BOSCO", location: "VIA ROSALBA CARRIERA 14, MILANO" },
-            { id: 11, type: 'match', round: "Ritorno", date: "21/01", title: "vs S.GIORGIO LIMITO SGL", location: "VIA ROSALBA CARRIERA 14, MILANO" },
-            { id: 12, type: 'match', round: "Ritorno", date: "28/01", title: "vs VITTORINI", location: "VIA ROSALBA CARRIERA 14, MILANO" },
-            { id: 13, type: 'match', round: "Ritorno", date: "04/02", title: "vs PANTIGLIATE POL.", location: "VIA ROSALBA CARRIERA 14, MILANO" },
-            { id: 14, type: 'match', round: "Ritorno", date: "12/02", title: "POL. FUTURA vs MB", location: "VIA DA VINCI 18, PADERNO DUGNANO" }
+            { id: 1, round: "Andata", date: "17/12", title: "vs ASCOT TRIANTE NSC", location: "VIA ROSALBA CARRIERA 14, MILANO" },
+            { id: 2, round: "Andata", date: "15/10", title: "ZERONOVE 172 vs MB", location: "VIA VALVASSORI PERONI 48, MILANO" },
+            { id: 3, round: "Andata", date: "22/10", title: "CAMPAGNOLA vs MB", location: "VIA TARRA 8, LISSONE" },
+            { id: 4, round: "Andata", date: "29/10", title: "S.GIORGIO LIMITO vs MB", location: "P.ZA DON MILANI, PIOLTELLO" },
+            { id: 5, round: "Andata", date: "05/11", title: "VITTORINI vs MB", location: "VIA TOSI 21, MILANO" },
+            { id: 6, round: "Andata", date: "10/11", title: "PANTIGLIATE vs MB", location: "VIA STELLA POLARE 11/A, MEDIGLIA" },
+            { id: 7, round: "Andata", date: "19/11", title: "vs POLISPORTIVA FUTURA", location: "VIA ROSALBA CARRIERA 14, MILANO" },
+            { id: 8, round: "Ritorno", date: "29/11", title: "ASCOT TRIANTE vs MB", location: "VIA DUCA D'AOSTA 8/A, MONZA" },
+            { id: 9, round: "Ritorno", date: "10/12", title: "vs ZERONOVE 172", location: "VIA ROSALBA CARRIERA 14, MILANO" },
+            { id: 10, round: "Ritorno", date: "17/01", title: "vs CAMPAGNOLA DON BOSCO", location: "VIA ROSALBA CARRIERA 14, MILANO" },
+            { id: 11, round: "Ritorno", date: "21/01", title: "vs S.GIORGIO LIMITO SGL", location: "VIA ROSALBA CARRIERA 14, MILANO" },
+            { id: 12, round: "Ritorno", date: "28/01", title: "vs VITTORINI", location: "VIA ROSALBA CARRIERA 14, MILANO" },
+            { id: 13, round: "Ritorno", date: "04/02", title: "vs PANTIGLIATE POL.", location: "VIA ROSALBA CARRIERA 14, MILANO" },
+            { id: 14, round: "Ritorno", date: "12/02", title: "POL. FUTURA vs MB", location: "VIA DA VINCI 18, PADERNO DUGNANO" }
         ];
 
         const OPPONENTS = [
@@ -787,20 +652,13 @@
         ];
 
         let currentUser = localStorage.getItem('mb_user') || null;
-        let activeSection = 'matches'; // 'matches' | 'trainings' | 'opponents'
+        let activeSection = 'matches'; // 'matches' | 'opponents'
         let activeTab = 'my';         // 'my' | 'team'
         let attendanceData = {};
-        let customTrainings = [];
 
         // Sincronizzazione Realtime Firebase
         db.ref('attendance').on('value', (snapshot) => {
             attendanceData = snapshot.val() || {};
-            refreshUI();
-        });
-
-        db.ref('trainings').on('value', (snapshot) => {
-            const data = snapshot.val() || {};
-            customTrainings = Object.keys(data).map(key => ({ id: key, type: 'training', ...data[key] }));
             refreshUI();
         });
 
@@ -818,9 +676,9 @@
             document.getElementById('currentUserName').innerText = userName;
             document.getElementById('userSelectionScreen').classList.add('hidden');
             document.getElementById('upcomingWidget').classList.remove('hidden');
-            document.getElementById('homeNav').classList.remove('hidden');
+            document.getElementById('navTabs').classList.remove('hidden');
             document.getElementById('userBar').classList.remove('hidden');
-            switchSection(activeSection);
+            refreshUI();
         }
 
         function switchUser() {
@@ -828,10 +686,8 @@
             localStorage.removeItem('mb_user');
             document.getElementById('userSelectionScreen').classList.remove('hidden');
             document.getElementById('upcomingWidget').classList.add('hidden');
-            document.getElementById('homeNav').classList.add('hidden');
             document.getElementById('navTabs').classList.add('hidden');
             document.getElementById('userBar').classList.add('hidden');
-            document.getElementById('addTrainingSection').classList.add('hidden');
             document.getElementById('itemsContainer').classList.add('hidden');
             document.getElementById('opponentsContainer').classList.add('hidden');
             document.getElementById('matrixContainer').classList.add('hidden');
@@ -839,24 +695,10 @@
 
         function toggleOpponents() {
             if (activeSection === 'opponents') {
-                switchSection('matches');
+                activeSection = 'matches';
             } else {
-                switchSection('opponents');
+                activeSection = 'opponents';
             }
-        }
-
-        function switchSection(section) {
-            activeSection = section;
-            
-            document.getElementById('btnSectionMatches').classList.toggle('active', section === 'matches');
-            document.getElementById('btnSectionTrainings').classList.toggle('active', section === 'trainings');
-            document.getElementById('btnSectionOpponents').classList.toggle('active', section === 'opponents');
-
-            // Nascondi home nav e tabs se siamo in modalità Avversari
-            document.getElementById('navTabs').classList.toggle('hidden', section === 'opponents');
-            document.getElementById('upcomingWidget').classList.toggle('hidden', section === 'opponents');
-            document.getElementById('homeNav').classList.toggle('hidden', section === 'opponents');
-
             refreshUI();
         }
 
@@ -870,10 +712,11 @@
         function refreshUI() {
             if (!currentUser) return;
 
-            const isTrainings = activeSection === 'trainings';
             const isOpponents = activeSection === 'opponents';
 
-            document.getElementById('addTrainingSection').classList.toggle('hidden', !isTrainings || activeTab !== 'my');
+            document.getElementById('btnSectionOpponents').classList.toggle('active', isOpponents);
+            document.getElementById('navTabs').classList.toggle('hidden', isOpponents);
+            document.getElementById('upcomingWidget').classList.toggle('hidden', isOpponents);
             document.getElementById('opponentsContainer').classList.toggle('hidden', !isOpponents);
 
             if (isOpponents) {
@@ -885,7 +728,7 @@
                 if (activeTab === 'my') {
                     document.getElementById('itemsContainer').classList.remove('hidden');
                     document.getElementById('matrixContainer').classList.add('hidden');
-                    renderItems();
+                    renderMatches();
                 } else {
                     document.getElementById('itemsContainer').classList.add('hidden');
                     document.getElementById('matrixContainer').classList.remove('hidden');
@@ -895,25 +738,16 @@
         }
 
         function renderUpcomingWidget() {
-            const allEvents = [...MATCHES, ...customTrainings];
-            const nextEvents = allEvents.slice(0, 2);
+            const nextEvents = MATCHES.slice(0, 2);
             const grid = document.getElementById('upcomingGrid');
 
-            if (nextEvents.length === 0) {
-                grid.innerHTML = `<div style="font-size:0.8rem; color:var(--text-secondary);">Nessun evento in programma.</div>`;
-                return;
-            }
-
             grid.innerHTML = nextEvents.map(evt => {
-                const isMatch = evt.type === 'match';
                 const status = (attendanceData[evt.id] || {})[currentUser];
                 let statusBadge = status === 'YES' ? '🟢 Presente' : status === 'NO' ? '🔴 Assente' : status === 'MAYBE' ? '🟡 In forse' : '⚪ Da confermare';
 
                 return `
-                    <div class="upcoming-card ${isMatch ? 'is-match' : ''}" onclick="goToEvent('${evt.type}')">
-                        <span class="upcoming-card-type ${isMatch ? 'type-match' : 'type-training'}">
-                            ${isMatch ? '🏆 Partita' : '🏋 Allenamento'}
-                        </span>
+                    <div class="upcoming-card">
+                        <span class="upcoming-card-type">🏆 Partita</span>
                         <div class="upcoming-card-title">${evt.title}</div>
                         <div class="upcoming-card-info">📅 ${evt.date} | 📍 ${evt.location}</div>
                         <div style="font-size:0.75rem; font-weight:600; margin-top:8px; color:var(--text-secondary);">
@@ -922,38 +756,6 @@
                     </div>
                 `;
             }).join('');
-        }
-
-        function goToEvent(type) {
-            if (type === 'match') switchSection('matches');
-            else switchSection('trainings');
-        }
-
-        function createTraining() {
-            const dateVal = document.getElementById('newTrainDate').value;
-            const locationVal = document.getElementById('newTrainLocation').value;
-
-            if (!dateVal) {
-                alert("Seleziona una data per l'allenamento.");
-                return;
-            }
-
-            const formattedDate = dateVal.split('-').reverse().slice(0, 2).join('/');
-            const newRef = db.ref('trainings').push();
-            newRef.set({
-                title: "Allenamento",
-                date: formattedDate,
-                location: locationVal
-            });
-
-            document.getElementById('newTrainDate').value = "";
-        }
-
-        function deleteTraining(id) {
-            if (confirm("Vuoi davvero eliminare questo allenamento?")) {
-                db.ref(`trainings/${id}`).remove();
-                db.ref(`attendance/${id}`).remove();
-            }
         }
 
         function setPresence(itemId, status) {
@@ -968,20 +770,10 @@
             }
         }
 
-        function getActiveList() {
-            return activeSection === 'matches' ? MATCHES : customTrainings;
-        }
-
-        function renderItems() {
-            const list = getActiveList();
+        function renderMatches() {
             const container = document.getElementById('itemsContainer');
 
-            if (list.length === 0) {
-                container.innerHTML = `<div style="text-align:center; padding: 40px; color: var(--text-secondary);">Nessun elemento presente.</div>`;
-                return;
-            }
-
-            container.innerHTML = list.map(item => {
+            container.innerHTML = MATCHES.map(item => {
                 const itemData = attendanceData[item.id] || {};
                 const userStatus = itemData[currentUser];
 
@@ -996,16 +788,13 @@
                                 <div class="item-title">${item.title}</div>
                                 <div class="item-info">📅 ${item.date} | 📍 ${item.location}</div>
                             </div>
-                            <div>
-                                ${item.round ? `<span class="badge">${item.round}</span>` : ''}
-                                ${activeSection === 'trainings' ? `<button class="btn-delete" onclick="deleteTraining('${item.id}')">Elimina</button>` : ''}
-                            </div>
+                            <span class="badge">${item.round}</span>
                         </div>
 
                         <div class="status-options">
-                            <button class="opt-btn yes ${userStatus === 'YES' ? 'active' : ''}" onclick="setPresence('${item.id}', 'YES')">Ci sarò</button>
-                            <button class="opt-btn maybe ${userStatus === 'MAYBE' ? 'active' : ''}" onclick="setPresence('${item.id}', 'MAYBE')">In forse</button>
-                            <button class="opt-btn no ${userStatus === 'NO' ? 'active' : ''}" onclick="setPresence('${item.id}', 'NO')">Assente</button>
+                            <button class="opt-btn yes ${userStatus === 'YES' ? 'active' : ''}" onclick="setPresence(${item.id}, 'YES')">Ci sarò</button>
+                            <button class="opt-btn maybe ${userStatus === 'MAYBE' ? 'active' : ''}" onclick="setPresence(${item.id}, 'MAYBE')">In forse</button>
+                            <button class="opt-btn no ${userStatus === 'NO' ? 'active' : ''}" onclick="setPresence(${item.id}, 'NO')">Assente</button>
                         </div>
 
                         <div class="team-summary">
@@ -1028,7 +817,7 @@
             container.innerHTML = `
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
                     <h3 style="font-size:1.1rem; font-weight:700;">Squadre Avversarie</h3>
-                    <button class="btn-subtle" onclick="switchSection('matches')">✕ Chiudi</button>
+                    <button class="btn-subtle" onclick="toggleOpponents()">✕ Chiudi</button>
                 </div>
             ` + OPPONENTS.map(opp => `
                 <div class="opponent-card">
@@ -1054,24 +843,18 @@
         }
 
         function renderMatrix() {
-            const list = getActiveList();
             const table = document.getElementById('matrixTable');
 
-            if (list.length === 0) {
-                table.innerHTML = `<tr><td style="padding:20px;">Nessun dato disponibile.</td></tr>`;
-                return;
-            }
-
             let headerHTML = `<thead><tr><th class="player-col">Giocatore</th>`;
-            list.forEach((item, idx) => {
-                headerHTML += `<th>${activeSection === 'matches' ? 'P' + (idx+1) : 'A' + (idx+1)}<br><small style="font-weight:400;">${item.date}</small></th>`;
+            MATCHES.forEach((item, idx) => {
+                headerHTML += `<th>P${idx+1}<br><small style="font-weight:400;">${item.date}</small></th>`;
             });
             headerHTML += `</tr></thead>`;
 
             let bodyHTML = `<tbody>`;
             PLAYERS.forEach(p => {
                 bodyHTML += `<tr><td class="player-name">${p}</td>`;
-                list.forEach(item => {
+                MATCHES.forEach(item => {
                     const st = (attendanceData[item.id] || {})[p];
                     let icon = '-';
                     let cssClass = 'st-none';
@@ -1085,7 +868,7 @@
             });
 
             bodyHTML += `<tr style="background:rgba(120, 120, 128, 0.08); font-weight:bold;"><td class="player-name">Tot. Sì</td>`;
-            list.forEach(item => {
+            MATCHES.forEach(item => {
                 const count = PLAYERS.filter(p => (attendanceData[item.id] || {})[p] === 'YES').length;
                 bodyHTML += `<td style="color:var(--success)">${count}</td>`;
             });
