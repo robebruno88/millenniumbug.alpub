@@ -288,6 +288,65 @@
             border-color: var(--accent);
         }
 
+        /* Form Aggiunta / Modifica Partita (Admin) */
+        .admin-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: var(--radius-lg);
+            padding: 18px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .admin-card h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--text);
+        }
+
+        .admin-form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        @media (max-width: 600px) {
+            .admin-form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .input-field {
+            padding: 10px 12px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border);
+            background: #ffffff;
+            font-size: 0.85rem;
+            outline: none;
+            color: var(--text);
+            width: 100%;
+        }
+
+        .btn-admin-action {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-admin-action:hover {
+            background: var(--accent-hover);
+        }
+
         /* Match Cards */
         .item-card {
             background: var(--card-bg);
@@ -329,6 +388,25 @@
             font-weight: 600;
             white-space: nowrap;
         }
+
+        .admin-controls {
+            display: inline-flex;
+            gap: 6px;
+            margin-left: 8px;
+        }
+
+        .btn-edit-match, .btn-delete-match {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 0.78rem;
+            font-weight: 600;
+            padding: 2px 6px;
+            border-radius: 6px;
+        }
+
+        .btn-edit-match { color: var(--accent); background: var(--accent-light); }
+        .btn-delete-match { color: var(--danger); background: var(--danger-bg); }
 
         /* Option Buttons */
         .status-options {
@@ -523,6 +601,25 @@
         <div class="user-grid" id="userGrid"></div>
     </div>
 
+    <!-- Modulo Admin Aggiunta / Modifica Partita (Solo Rob / Waiz) -->
+    <div id="adminMatchSection" class="admin-card hidden">
+        <h3 id="adminFormTitle">➕ Aggiungi / Modifica Partita</h3>
+        <input type="hidden" id="adminMatchId">
+        <div class="admin-form-grid">
+            <input type="text" id="adminDate" class="input-field" placeholder="Data (es: 15/10)">
+            <select id="adminRound" class="input-field">
+                <option value="Andata">Andata</option>
+                <option value="Ritorno">Ritorno</option>
+            </select>
+            <input type="text" id="adminTitle" class="input-field" placeholder="Titolo (es: ZERONOVE 172 vs MillenniumBug.AlPub)">
+            <input type="text" id="adminLocation" class="input-field" placeholder="Luogo e Indirizzo">
+        </div>
+        <div style="display:flex; gap:10px;">
+            <button class="btn-admin-action" onclick="saveMatchAdmin()">Salva Partita</button>
+            <button id="btnCancelEdit" class="btn-subtle hidden" onclick="cancelEditMatch()">Annulla</button>
+        </div>
+    </div>
+
     <main id="itemsContainer" class="hidden"></main>
 
     <!-- Contenitore Squadre Avversarie -->
@@ -548,27 +645,30 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
+        const ADMIN_USERS = ["Rob", "Waiz"];
+
         const PLAYERS = [
             "Alby", "Angy", "Anto", "Dani", "Fra", 
             "Gianlu", "Gio", "Giuly", "Ila", "Jack", 
             "Kiki", "Marti", "Paul", "Rob", "Vanni", "Waiz"
         ];
 
-        const MATCHES = [
-            { id: 1, round: "Andata", date: "17/12", title: "vs ASCOT TRIANTE NSC", location: "VIA ROSALBA CARRIERA 14, MILANO" },
-            { id: 2, round: "Andata", date: "15/10", title: "ZERONOVE 172 vs MB", location: "VIA VALVASSORI PERONI 48, MILANO" },
-            { id: 3, round: "Andata", date: "22/10", title: "CAMPAGNOLA vs MB", location: "VIA TARRA 8, LISSONE" },
-            { id: 4, round: "Andata", date: "29/10", title: "S.GIORGIO LIMITO vs MB", location: "P.ZA DON MILANI, PIOLTELLO" },
-            { id: 5, round: "Andata", date: "05/11", title: "VITTORINI vs MB", location: "VIA TOSI 21, MILANO" },
-            { id: 6, round: "Andata", date: "10/11", title: "PANTIGLIATE vs MB", location: "VIA STELLA POLARE 11/A, MEDIGLIA" },
-            { id: 7, round: "Andata", date: "19/11", title: "vs POLISPORTIVA FUTURA", location: "VIA ROSALBA CARRIERA 14, MILANO" },
-            { id: 8, round: "Ritorno", date: "29/11", title: "ASCOT TRIANTE vs MB", location: "VIA DUCA D'AOSTA 8/A, MONZA" },
-            { id: 9, round: "Ritorno", date: "10/12", title: "vs ZERONOVE 172", location: "VIA ROSALBA CARRIERA 14, MILANO" },
-            { id: 10, round: "Ritorno", date: "17/01", title: "vs CAMPAGNOLA DON BOSCO", location: "VIA ROSALBA CARRIERA 14, MILANO" },
-            { id: 11, round: "Ritorno", date: "21/01", title: "vs S.GIORGIO LIMITO SGL", location: "VIA ROSALBA CARRIERA 14, MILANO" },
-            { id: 12, round: "Ritorno", date: "28/01", title: "vs VITTORINI", location: "VIA ROSALBA CARRIERA 14, MILANO" },
-            { id: 13, round: "Ritorno", date: "04/02", title: "vs PANTIGLIATE POL.", location: "VIA ROSALBA CARRIERA 14, MILANO" },
-            { id: 14, round: "Ritorno", date: "12/02", title: "POL. FUTURA vs MB", location: "VIA DA VINCI 18, PADERNO DUGNANO" }
+        // Calendario Iniziale di Default
+        const INITIAL_MATCHES = [
+            { id: 2, round: "Andata", date: "15/10", title: "ZERONOVE 172 vs MillenniumBug.AlPub", location: "VIA VALVASSORI PERONI 48, MILANO" },
+            { id: 3, round: "Andata", date: "22/10", title: "CAMPAGNOLA DON BOSCO vs MillenniumBug.AlPub", location: "VIA TARRA 8, LISSONE" },
+            { id: 4, round: "Andata", date: "29/10", title: "S.GIORGIO LIMITO SGL vs MillenniumBug.AlPub", location: "P.ZA DON MILANI, PIOLTELLO" },
+            { id: 5, round: "Andata", date: "05/11", title: "VITTORINI vs MillenniumBug.AlPub", location: "VIA TOSI 21, MILANO" },
+            { id: 6, round: "Andata", date: "10/11", title: "PANTIGLIATE POLISPORTIVA vs MillenniumBug.AlPub", location: "VIA STELLA POLARE 11/A, MEDIGLIA" },
+            { id: 7, round: "Andata", date: "19/11", title: "MillenniumBug.AlPub vs POLISPORTIVA FUTURA", location: "VIA ROSALBA CARRIERA 14, MILANO" },
+            { id: 8, round: "Ritorno", date: "29/11", title: "ASCOT TRIANTE NSC vs MillenniumBug.AlPub", location: "VIA DUCA D'AOSTA 8/A, MONZA" },
+            { id: 9, round: "Ritorno", date: "10/12", title: "MillenniumBug.AlPub vs ZERONOVE 172", location: "VIA ROSALBA CARRIERA 14, MILANO" },
+            { id: 1, round: "Andata", date: "17/12", title: "MillenniumBug.AlPub vs ASCOT TRIANTE NSC", location: "VIA ROSALBA CARRIERA 14, MILANO" },
+            { id: 10, round: "Ritorno", date: "17/01", title: "MillenniumBug.AlPub vs CAMPAGNOLA DON BOSCO", location: "VIA ROSALBA CARRIERA 14, MILANO" },
+            { id: 11, round: "Ritorno", date: "21/01", title: "MillenniumBug.AlPub vs S.GIORGIO LIMITO SGL", location: "VIA ROSALBA CARRIERA 14, MILANO" },
+            { id: 12, round: "Ritorno", date: "28/01", title: "MillenniumBug.AlPub vs VITTORINI", location: "VIA ROSALBA CARRIERA 14, MILANO" },
+            { id: 13, round: "Ritorno", date: "04/02", title: "MillenniumBug.AlPub vs PANTIGLIATE POLISPORTIVA", location: "VIA ROSALBA CARRIERA 14, MILANO" },
+            { id: 14, round: "Ritorno", date: "12/02", title: "POLISPORTIVA FUTURA vs MillenniumBug.AlPub", location: "VIA DA VINCI 18, PADERNO DUGNANO" }
         ];
 
         const OPPONENTS = [
@@ -655,12 +755,30 @@
         let activeSection = 'matches'; // 'matches' | 'opponents'
         let activeTab = 'my';         // 'my' | 'team'
         let attendanceData = {};
+        let matchesData = [];
 
-        // Sincronizzazione Realtime Firebase
+        // Inizializzazione e ascolto Realtime delle Partite da Firebase
+        db.ref('matches').on('value', (snapshot) => {
+            const val = snapshot.val();
+            if (!val) {
+                // Se il nodo matches su Firebase non esiste ancora, lo popoliamo col calendario iniziale
+                db.ref('matches').set(INITIAL_MATCHES);
+                matchesData = INITIAL_MATCHES;
+            } else {
+                matchesData = Array.isArray(val) ? val.filter(Boolean) : Object.values(val);
+            }
+            refreshUI();
+        });
+
+        // Sincronizzazione Realtime delle Presenze da Firebase
         db.ref('attendance').on('value', (snapshot) => {
             attendanceData = snapshot.val() || {};
             refreshUI();
         });
+
+        function isAdmin() {
+            return ADMIN_USERS.includes(currentUser);
+        }
 
         function initUserGrid() {
             const grid = document.getElementById('userGrid');
@@ -688,6 +806,7 @@
             document.getElementById('upcomingWidget').classList.add('hidden');
             document.getElementById('navTabs').classList.add('hidden');
             document.getElementById('userBar').classList.add('hidden');
+            document.getElementById('adminMatchSection').classList.add('hidden');
             document.getElementById('itemsContainer').classList.add('hidden');
             document.getElementById('opponentsContainer').classList.add('hidden');
             document.getElementById('matrixContainer').classList.add('hidden');
@@ -719,6 +838,9 @@
             document.getElementById('upcomingWidget').classList.toggle('hidden', isOpponents);
             document.getElementById('opponentsContainer').classList.toggle('hidden', !isOpponents);
 
+            // Se l'utente è Rob o Waiz, mostra il pannello di gestione della partita
+            document.getElementById('adminMatchSection').classList.toggle('hidden', !isAdmin() || isOpponents || activeTab !== 'my');
+
             if (isOpponents) {
                 document.getElementById('itemsContainer').classList.add('hidden');
                 document.getElementById('matrixContainer').classList.add('hidden');
@@ -738,8 +860,13 @@
         }
 
         function renderUpcomingWidget() {
-            const nextEvents = MATCHES.slice(0, 2);
+            const nextEvents = matchesData.slice(0, 2);
             const grid = document.getElementById('upcomingGrid');
+
+            if (nextEvents.length === 0) {
+                grid.innerHTML = `<div style="font-size:0.8rem; color:var(--text-secondary);">Nessuna partita in programma.</div>`;
+                return;
+            }
 
             grid.innerHTML = nextEvents.map(evt => {
                 const status = (attendanceData[evt.id] || {})[currentUser];
@@ -773,7 +900,12 @@
         function renderMatches() {
             const container = document.getElementById('itemsContainer');
 
-            container.innerHTML = MATCHES.map(item => {
+            if (matchesData.length === 0) {
+                container.innerHTML = `<div style="text-align:center; padding:40px; color:var(--text-secondary);">Nessuna partita in programma.</div>`;
+                return;
+            }
+
+            container.innerHTML = matchesData.map(item => {
                 const itemData = attendanceData[item.id] || {};
                 const userStatus = itemData[currentUser];
 
@@ -788,7 +920,15 @@
                                 <div class="item-title">${item.title}</div>
                                 <div class="item-info">📅 ${item.date} | 📍 ${item.location}</div>
                             </div>
-                            <span class="badge">${item.round}</span>
+                            <div>
+                                <span class="badge">${item.round}</span>
+                                ${isAdmin() ? `
+                                    <div class="admin-controls">
+                                        <button class="btn-edit-match" onclick="editMatchAdmin(${item.id})">✏️ Edit</button>
+                                        <button class="btn-delete-match" onclick="deleteMatchAdmin(${item.id})">🗑️ Elimina</button>
+                                    </div>
+                                ` : ''}
+                            </div>
                         </div>
 
                         <div class="status-options">
@@ -810,6 +950,83 @@
                     </div>
                 `;
             }).join('');
+        }
+
+        // Funzioni Amministrative per Aggiungere / Modificare / Eliminare Partite
+        function saveMatchAdmin() {
+            if (!isAdmin()) return;
+
+            const idVal = document.getElementById('adminMatchId').value;
+            const dateVal = document.getElementById('adminDate').value.trim();
+            const roundVal = document.getElementById('adminRound').value;
+            const titleVal = document.getElementById('adminTitle').value.trim();
+            const locationVal = document.getElementById('adminLocation').value.trim();
+
+            if (!dateVal || !titleVal || !locationVal) {
+                alert("Compila tutti i campi richiesti (Data, Titolo, Luogo).");
+                return;
+            }
+
+            let updatedList = [...matchesData];
+
+            if (idVal) {
+                // Modifica partita esistente
+                const idx = updatedList.findIndex(m => m.id == idVal);
+                if (idx !== -1) {
+                    updatedList[idx] = { id: Number(idVal), round: roundVal, date: dateVal, title: titleVal, location: locationVal };
+                }
+            } else {
+                // Nuova partita
+                const maxId = updatedList.reduce((max, item) => item.id > max ? item.id : max, 0);
+                const newMatch = {
+                    id: maxId + 1,
+                    round: roundVal,
+                    date: dateVal,
+                    title: titleVal,
+                    location: locationVal
+                };
+                updatedList.push(newMatch);
+            }
+
+            db.ref('matches').set(updatedList);
+            cancelEditMatch();
+        }
+
+        function editMatchAdmin(id) {
+            if (!isAdmin()) return;
+
+            const match = matchesData.find(m => m.id == id);
+            if (!match) return;
+
+            document.getElementById('adminMatchId').value = match.id;
+            document.getElementById('adminDate').value = match.date;
+            document.getElementById('adminRound').value = match.round;
+            document.getElementById('adminTitle').value = match.title;
+            document.getElementById('adminLocation').value = match.location;
+
+            document.getElementById('adminFormTitle').innerText = "✏️ Modifica Partita #" + match.id;
+            document.getElementById('btnCancelEdit').classList.remove('hidden');
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function deleteMatchAdmin(id) {
+            if (!isAdmin()) return;
+
+            if (confirm("Sei sicuro di voler eliminare questa partita?")) {
+                const updatedList = matchesData.filter(m => m.id != id);
+                db.ref('matches').set(updatedList);
+                db.ref(`attendance/${id}`).remove();
+            }
+        }
+
+        function cancelEditMatch() {
+            document.getElementById('adminMatchId').value = "";
+            document.getElementById('adminDate').value = "";
+            document.getElementById('adminTitle').value = "";
+            document.getElementById('adminLocation').value = "";
+            document.getElementById('adminFormTitle').innerText = "➕ Aggiungi / Modifica Partita";
+            document.getElementById('btnCancelEdit').classList.add('hidden');
         }
 
         function renderOpponents() {
@@ -845,8 +1062,13 @@
         function renderMatrix() {
             const table = document.getElementById('matrixTable');
 
+            if (matchesData.length === 0) {
+                table.innerHTML = `<tr><td style="padding:20px;">Nessuna partita presente.</td></tr>`;
+                return;
+            }
+
             let headerHTML = `<thead><tr><th class="player-col">Giocatore</th>`;
-            MATCHES.forEach((item, idx) => {
+            matchesData.forEach((item, idx) => {
                 headerHTML += `<th>P${idx+1}<br><small style="font-weight:400;">${item.date}</small></th>`;
             });
             headerHTML += `</tr></thead>`;
@@ -854,7 +1076,7 @@
             let bodyHTML = `<tbody>`;
             PLAYERS.forEach(p => {
                 bodyHTML += `<tr><td class="player-name">${p}</td>`;
-                MATCHES.forEach(item => {
+                matchesData.forEach(item => {
                     const st = (attendanceData[item.id] || {})[p];
                     let icon = '-';
                     let cssClass = 'st-none';
@@ -868,7 +1090,7 @@
             });
 
             bodyHTML += `<tr style="background:rgba(120, 120, 128, 0.08); font-weight:bold;"><td class="player-name">Tot. Sì</td>`;
-            MATCHES.forEach(item => {
+            matchesData.forEach(item => {
                 const count = PLAYERS.filter(p => (attendanceData[item.id] || {})[p] === 'YES').length;
                 bodyHTML += `<td style="color:var(--success)">${count}</td>`;
             });
